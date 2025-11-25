@@ -1,7 +1,7 @@
 package GUI.Controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 
 public class MyTunesController {
     @FXML
