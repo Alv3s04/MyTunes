@@ -18,28 +18,65 @@ public class MyTunesMainController {
 
     }
 
+    /**
+     * Playing music management
+     * @param actionEvent
+     */
     @FXML
     private void onClickNextSong(ActionEvent actionEvent) {
+
     }
 
     @FXML
     private void onClickPreviousSong(ActionEvent actionEvent) {
+
     }
 
     @FXML
     private void onClickPlayPause(ActionEvent actionEvent) {
-    }
 
-    @FXML
-    private void onClickNewPlaylist(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void onClickDeleteSong(ActionEvent actionEvent) {
     }
 
     @FXML
     private void onClickScrollUp(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickScrollDown(ActionEvent actionEvent) {
+
+    }
+
+    /**
+     * Song Controls
+     * @param actionEvent
+     */
+    @FXML
+    private void onClickUpdateSong(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickNewSong(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickDeleteSong(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickClose(ActionEvent actionEvent) {
+
+    }
+
+    /**
+     * Playlist Controls
+     * @param actionEvent
+     */
+    @FXML
+    private void onClickNewPlaylist(ActionEvent actionEvent) {
     }
 
     @FXML
@@ -51,27 +88,10 @@ public class MyTunesMainController {
     }
 
     @FXML
-    private void onClickScrollDown(ActionEvent actionEvent) {
-    }
-
-    @FXML
     private void onClickDeleteSongInPlaylist(ActionEvent actionEvent) {
     }
 
     @FXML
-    private void onClickClose(ActionEvent actionEvent) {
-    }
-
-    @FXML
     private void onClickMoveSongToPlaylist(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void onClickUpdateSong(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void onClickNewSong(ActionEvent actionEvent) {
-
     }
 }
