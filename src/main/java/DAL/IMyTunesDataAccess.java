@@ -1,7 +1,8 @@
 package DAL;
 
 // Project imports
-import BE.Tunes;
+import BE.Playlists;
+import BE.Songs;
 
 // Java imports
 import java.util.List;
@@ -11,8 +12,13 @@ import java.util.List;
  */
 public interface IMyTunesDataAccess {
 
-    List<Tunes> getAllTunes() throws Exception;
-    Tunes createTunes(Tunes newTunes) throws Exception;
-    void updateTunes(Tunes tunes) throws Exception;
-    void deleteTunes(Tunes tunes) throws Exception;
+    List<Songs> getAllSongs() throws Exception;
+    Songs createSongs(Songs newSongs) throws Exception;
+    void updateSongs(Songs songs) throws Exception;
+    void deleteSongs(Songs songs) throws Exception;
+
+    List<Playlists> getAllPlaylists() throws Exception;
+    Playlists createPlaylists(Playlists newPlaylist) throws Exception;
+    void updateSongs(Playlists playlists) throws Exception;
+    void deleteSongs(Playlists playlists) throws Exception;
 }
