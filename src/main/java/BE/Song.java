@@ -1,16 +1,16 @@
 package BE;
 
-public class Songs {
+public class Song {
 
     private String title;
     private String artist;
     private String category;
     private double time;
-    public Songs(String title, String artist, String category, double time) {
-        setTitle(title);
-        setArtist(artist);
-        setCategory(category);
-        setTime(time);
+    public Song(String title, String artist, String category, double time) {
+        this.title = title;
+        this.artist = artist;
+        this.category = category;
+        this.time = time;
     }
     public String getTitle(){return title;}
 

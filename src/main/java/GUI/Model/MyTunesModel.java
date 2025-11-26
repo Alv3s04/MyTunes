@@ -1,11 +1,11 @@
 package GUI.Model;
 
-import BE.Songs;
+import BE.Song;
 import BLL.MyTunesManager;
 
 public class MyTunesModel {
     private MyTunesManager songManager;
-    public void deleteSong(Songs selectedSong) throws Exception {
-        songManager.deleteMovie(selectedSong);
+    public void deleteSong(Song selectedSong) throws Exception {
+        songManager.deleteSongs(selectedSong);
     }
 }

@@ -1,7 +1,7 @@
 package GUI.Controller;
 
 import BE.Playlists;
-import BE.Songs;
+import BE.Song;
 import GUI.Model.MyTunesModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,15 +18,15 @@ public class MyTunesMainController {
     @FXML
     private TableView<Playlists> tblPlaylists;
     @FXML
-    private TableView<Songs> tblSongs;
+    private TableView<Song> tblSongs;
     @FXML
-    private TableColumn<Songs, String> colTitles;
+    private TableColumn<Song, String> colTitles;
     @FXML
-    private TableColumn<Songs, String> colArtists;
+    private TableColumn<Song, String> colArtists;
     @FXML
-    private TableColumn<Songs, String> colCategories;
+    private TableColumn<Song, String> colCategories;
     @FXML
-    private TableColumn<Songs, Double> colTime;
+    private TableColumn<Song, Double> colTime;
 
     private MyTunesModel songModel;
 
@@ -95,7 +95,7 @@ public class MyTunesMainController {
 
     @FXML
     private void onClickDeleteSong(ActionEvent actionEvent) {
-Songs selectedSong = tblSongs.getSelectionModel().getSelectedItem();
+Song selectedSong = tblSongs.getSelectionModel().getSelectedItem();
 
 if(selectedSong != null){
     try{

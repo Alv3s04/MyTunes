@@ -2,7 +2,7 @@ package DAL;
 
 // Project imports
 import BE.Playlists;
-import BE.Songs;
+import BE.Song;
 import DAL.db.DBConnector;
 // Java imports
 import java.util.List;
@@ -12,23 +12,23 @@ public class MyTunesDAO_File implements IMyTunesDataAccess {
     private DBConnector dbConnector;
 
     @Override
-    public List<Songs> getAllSongs() throws Exception {
+    public List<Song> getAllSongs() throws Exception {
         // return List.of();
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Songs createSongs(Songs newSongs) throws Exception {
+    public Song createSongs(Song newSong) throws Exception {
 return null;
     }
 
     @Override
-    public void updateSongs(Songs songs) throws Exception {
+    public void updateSongs(Song song) throws Exception {
 
     }
 
     @Override
-    public void deleteSongs(Songs songs) throws Exception {
+    public void deleteSongs(Song song) throws Exception {
 
     }
 
