@@ -10,44 +10,43 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0"
-            xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.MyTunesMainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.MyTunesMainController">
     <children>
         <Label fx:id="lblCurrentlyPlaying" layoutX="326.0" layoutY="45.0" text="(none) ... is playing" />
         <TextField fx:id="txtFieldSearch" layoutX="613.0" layoutY="21.0" prefHeight="26.0" prefWidth="115.0" promptText="Search..." />
         <Label layoutX="582.0" layoutY="24.0" prefHeight="18.0" prefWidth="34.0" text="Filter:" />
         <Slider fx:id="sliderVolume" layoutX="72.0" layoutY="76.0" prefHeight="18.0" prefWidth="142.0" />
 
-        <Button onAction="#onClickSearch" layoutX="741.0" layoutY="21.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="34.0" text="B" />
-        <Button onAction="#onClickPreviousSong" layoutX="80.0" layoutY="41.0" mnemonicParsing="false" text="&lt;&lt;" />
-        <Button onAction="#onClickPlayPause" layoutX="126.0" layoutY="31.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="34.0" text="‣">
+        <Button layoutX="741.0" layoutY="21.0" mnemonicParsing="false" onAction="#onClickSearch" prefHeight="26.0" prefWidth="34.0" text="B" />
+        <Button layoutX="80.0" layoutY="41.0" mnemonicParsing="false" onAction="#onClickPreviousSong" text="&lt;&lt;" />
+        <Button layoutX="126.0" layoutY="31.0" mnemonicParsing="false" onAction="#onClickPlayPause" prefHeight="37.0" prefWidth="34.0" text="‣">
             <font>
                 <Font size="16.0" />
             </font>
         </Button>
-        <Button onAction="#onClickNextSong" layoutX="173.0" layoutY="41.0" mnemonicParsing="false" text="&gt;&gt;" />
+        <Button layoutX="173.0" layoutY="41.0" mnemonicParsing="false" onAction="#onClickNextSong" text="&gt;&gt;" />
 
-        <Button onAction="#onClickNewPlaylist" layoutX="8.0" layoutY="560.0" mnemonicParsing="false" text="New Playlist" />
-        <Button onAction="#onClickUpdatePlaylist" layoutX="95.0" layoutY="560.0" mnemonicParsing="false" text="Edit Playlist" />
-        <Button onAction="#onClickDeletePlaylist" layoutX="189.0" layoutY="560.0" mnemonicParsing="false" text="Delete Playlist" />
+        <Button layoutX="8.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickNewPlaylist" text="New Playlist" />
+        <Button layoutX="95.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickUpdatePlaylist" text="Edit Playlist" />
+        <Button layoutX="189.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickDeletePlaylist" text="Delete Playlist" />
 
         <Label layoutX="10.0" layoutY="86.0" prefHeight="18.0" prefWidth="49.0" text="Playlists" />
         <Label layoutX="287.0" layoutY="86.0" text="Songs on Playlist" />
 
-        <Button onAction="#onClickScrollUp" layoutX="287.0" layoutY="560.0" mnemonicParsing="false" text="Up" />
-        <Button onAction="#onClickScrollDown" layoutX="326.0" layoutY="560.0" mnemonicParsing="false" text="Down" />
-        <Button onAction="#onClickDeleteSongInPlaylist" layoutX="392.0" layoutY="560.0" mnemonicParsing="false" text="Delete" />
+        <Button layoutX="287.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickScrollUp" text="Up" />
+        <Button layoutX="326.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickScrollDown" text="Down" />
+        <Button layoutX="392.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickDeleteSongInPlaylist" text="Delete" />
 
-        <Button onAction="#onClickMoveSongToPlaylist" layoutX="442.0" layoutY="108.0" mnemonicParsing="false" text="👈" />
+        <Button layoutX="442.0" layoutY="108.0" mnemonicParsing="false" onAction="#onClickMoveSongToPlaylist" text="👈" />
 
         <Label layoutX="480.0" layoutY="86.0" text="Songs" />
 
-        <Button onAction="#onClickNewSong" layoutX="468.0" layoutY="560.0" mnemonicParsing="false" text="New Song" />
-        <Button onAction="#onClickUpdateSong" layoutX="548.0" layoutY="560.0" mnemonicParsing="false" text="Edit Song" />
-        <Button onAction="#onClickDeleteSong" layoutX="626.0" layoutY="560.0" mnemonicParsing="false" text="Delete" />
-        <Button onAction="#onClickClose" layoutX="729.0" layoutY="560.0" mnemonicParsing="false" text="Close" />
+        <Button layoutX="468.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickNewSong" text="New Song" />
+        <Button layoutX="548.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickUpdateSong" text="Edit Song" />
+        <Button layoutX="626.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickDeleteSong" text="Delete" />
+        <Button layoutX="729.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickClose" text="Close" />
 
-        <TableView layoutX="8.0" layoutY="108.0" prefHeight="450.0" prefWidth="270.0">
+        <TableView fx:id="tblPlaylists" layoutX="8.0" layoutY="108.0" prefHeight="450.0" prefWidth="270.0">
             <columns>
                 <TableColumn prefWidth="75.0" text="C1" />
                 <TableColumn prefWidth="75.0" text="C2" />
@@ -58,12 +57,12 @@
             </columnResizePolicy>
         </TableView>
 
-        <TableView layoutX="468.0" layoutY="108.0" prefHeight="450.0" prefWidth="320.0">
+        <TableView fx:id="tblSongs" layoutX="468.0" layoutY="108.0" prefHeight="450.0" prefWidth="320.0">
             <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
-                <TableColumn prefWidth="75.0" text="C2" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="colTitles" prefWidth="132.0" text="Title" />
+                <TableColumn fx:id="colArtists" prefWidth="92.00006103515625" text="Artist" />
+                <TableColumn fx:id="colCategories" prefWidth="46.4000244140625" text="Category" />
+                <TableColumn fx:id="colTime" prefWidth="48.0" text="Time" />
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -73,4 +72,3 @@
         <ListView layoutX="287.0" layoutY="108.0" prefHeight="450.0" prefWidth="155.0" />
     </children>
 </AnchorPane>
-
