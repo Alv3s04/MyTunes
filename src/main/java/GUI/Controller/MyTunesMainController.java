@@ -5,16 +5,20 @@ import BE.Song;
 import GUI.Model.MyTunesModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
-public class MyTunesMainController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class MyTunesMainController implements Initializable {
 
     @FXML
     private Label lblCurrentlyPlaying;
     @FXML
     private TextField txtFieldSearch;
     @FXML
-    private Slider sliderVolume;
+    private Slider volumeSlider;
     @FXML
     private TableView<Playlists> tblPlaylists;
     @FXML
@@ -39,6 +43,12 @@ public class MyTunesMainController {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
+
     private void displayError(Throwable t) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Something went wrong");
@@ -50,10 +60,74 @@ public class MyTunesMainController {
 
     }
 
-    /**
-     * Playing music management
-     * @param actionEvent
-     */
+    // Song Management
+    @FXML
+    private void onClickNewSong(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickUpdateSong(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickDeleteSong(ActionEvent actionEvent) {
+        Song selectedSong = tblSongs.getSelectionModel().getSelectedItem();
+
+        if(selectedSong != null) {
+            try {
+                songModel.deleteSongs(selectedSong);
+            }
+            catch (Exception err) {
+                displayError(err);
+            }
+        }
+    }
+
+    @FXML
+    private void onClickMoveSongToPlaylist(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickClose(ActionEvent actionEvent) {
+
+    }
+
+    // Playlist
+    @FXML
+    private void onClickNewPlaylist(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickUpdatePlaylist(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickDeletePlaylist(ActionEvent actionEvent) {
+
+    }
+
+    // Songs on Playlist
+    @FXML
+    private void onClickScrollUp(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickScrollDown(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    private void onClickDeleteSongInPlaylist(ActionEvent actionEvent) {
+
+    }
+
+    // Playing music management
     @FXML
     private void onClickNextSong(ActionEvent actionEvent) {
 
@@ -67,72 +141,5 @@ public class MyTunesMainController {
     @FXML
     private void onClickPlayPause(ActionEvent actionEvent) {
 
-    }
-
-    @FXML
-    private void onClickScrollUp(ActionEvent actionEvent) {
-
-    }
-
-    @FXML
-    private void onClickScrollDown(ActionEvent actionEvent) {
-
-    }
-
-    /**
-     * Song Controls
-     * @param actionEvent
-     */
-    @FXML
-    private void onClickUpdateSong(ActionEvent actionEvent) {
-
-    }
-
-    @FXML
-    private void onClickNewSong(ActionEvent actionEvent) {
-
-    }
-
-    @FXML
-    private void onClickDeleteSong(ActionEvent actionEvent) {
-Song selectedSong = tblSongs.getSelectionModel().getSelectedItem();
-
-if(selectedSong != null){
-    try{
-        songModel.deleteSong(selectedSong);
-    }
-    catch (Exception err){
-        displayError(err);
-    }
-}
-    }
-
-    @FXML
-    private void onClickClose(ActionEvent actionEvent) {
-
-    }
-
-    /**
-     * Playlist Controls
-     * @param actionEvent
-     */
-    @FXML
-    private void onClickNewPlaylist(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void onClickUpdatePlaylist(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void onClickDeletePlaylist(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void onClickDeleteSongInPlaylist(ActionEvent actionEvent) {
-    }
-
-    @FXML
-    private void onClickMoveSongToPlaylist(ActionEvent actionEvent) {
     }
 }

@@ -13,11 +13,11 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.MyTunesMainController">
     <children>
         <Label fx:id="lblCurrentlyPlaying" layoutX="326.0" layoutY="45.0" text="(none) ... is playing" />
-        <TextField fx:id="txtFieldSearch" layoutX="613.0" layoutY="21.0" prefHeight="26.0" prefWidth="115.0" promptText="Search..." />
-        <Label layoutX="582.0" layoutY="24.0" prefHeight="18.0" prefWidth="34.0" text="Filter:" />
-        <Slider fx:id="sliderVolume" layoutX="72.0" layoutY="76.0" prefHeight="18.0" prefWidth="142.0" />
+        <TextField fx:id="txtFieldSearch" layoutX="631.0" layoutY="21.0" prefHeight="26.0" prefWidth="115.0" promptText="Search..." />
+        <Label layoutX="599.0" layoutY="25.0" prefHeight="18.0" prefWidth="32.0" text="Filter:" />
+        <Slider fx:id="volumeSlider" layoutX="72.0" layoutY="76.0" prefHeight="18.0" prefWidth="142.0" />
 
-        <Button layoutX="741.0" layoutY="21.0" mnemonicParsing="false" onAction="#onClickSearch" prefHeight="26.0" prefWidth="34.0" text="B" />
+        <Button layoutX="751.0" layoutY="21.0" mnemonicParsing="false" onAction="#onClickSearch" prefHeight="26.0" prefWidth="34.0" text="🔍" />
         <Button layoutX="80.0" layoutY="41.0" mnemonicParsing="false" onAction="#onClickPreviousSong" text="&lt;&lt;" />
         <Button layoutX="126.0" layoutY="31.0" mnemonicParsing="false" onAction="#onClickPlayPause" prefHeight="37.0" prefWidth="34.0" text="‣">
             <font>
@@ -33,11 +33,11 @@
         <Label layoutX="10.0" layoutY="86.0" prefHeight="18.0" prefWidth="49.0" text="Playlists" />
         <Label layoutX="287.0" layoutY="86.0" text="Songs on Playlist" />
 
-        <Button layoutX="287.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickScrollUp" text="Up" />
-        <Button layoutX="326.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickScrollDown" text="Down" />
+        <Button layoutX="287.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickScrollUp" prefHeight="26.0" prefWidth="26.0" text="↑" />
+        <Button layoutX="318.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickScrollDown" prefHeight="26.0" prefWidth="26.0" text="↓" />
         <Button layoutX="392.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickDeleteSongInPlaylist" text="Delete" />
 
-        <Button layoutX="442.0" layoutY="108.0" mnemonicParsing="false" onAction="#onClickMoveSongToPlaylist" text="👈" />
+        <Button layoutX="442.0" layoutY="108.0" mnemonicParsing="false" onAction="#onClickMoveSongToPlaylist" text="←" />
 
         <Label layoutX="480.0" layoutY="86.0" text="Songs" />
 

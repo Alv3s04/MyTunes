@@ -16,15 +16,20 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
     public MyTunesDAO_DB() throws IOException {
     }
 
+    // Songs
     @Override
     public List<Song> getAllSongs() throws Exception {
-        List<Song> allSongs = new ArrayList<>();
-        String sql = "SELECT * FROM songs";
 
+        ArrayList<Song> allSongs = new ArrayList<>();
+
+        // try-with-resources
         try (Connection conn = databaseConnector.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+             Statement stmt = conn.createStatement()) {
 
+            String sql = "SELECT * FROM dbo.songs";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Loop through rows from the database result set
             while (rs.next()) {
                 //Map DB row to Song object
                 int id = rs.getInt("Id");
@@ -36,8 +41,13 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
                 Song song = new Song(id, title, artist, category, time);
                 allSongs.add(song);
             }
+            return allSongs;
         }
-        return allSongs;
+
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not get songs from database", ex);
+        }
     }
 
 
@@ -91,6 +101,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
         }
     }
 
+    // Playlist
     @Override
     public List<Playlists> getAllPlaylists() throws Exception {
         // return List.of();
@@ -103,12 +114,12 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
     }
 
     @Override
-    public void updateSongs(Playlists playlists) throws Exception {
+    public void updatePlaylists(Playlists playlists) throws Exception {
 
     }
 
     @Override
-    public void deleteSongs(Playlists playlists) throws Exception {
+    public void deletePlaylists(Playlists playlists) throws Exception {
 
     }
 }

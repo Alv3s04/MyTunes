@@ -1,5 +1,6 @@
 package BLL;
 
+import BE.Playlists;
 import BE.Song;
 import BLL.util.MyTunesSearcher;
 import DAL.IMyTunesDataAccess;
@@ -10,15 +11,16 @@ import java.util.List;
 
 public class MyTunesManager {
 
-    private IMyTunesDataAccess songDAO;
+    private IMyTunesDataAccess myTunesDAO;
     private MyTunesSearcher myTunesSearcher = new MyTunesSearcher();
 
     public MyTunesManager() throws IOException {
-        songDAO = new MyTunesDAO_DB();
+        myTunesDAO = new MyTunesDAO_DB();
     }
 
+    // Songs
     public List<Song> getAllSongs() throws Exception {
-        return songDAO.getAllSongs();
+        return myTunesDAO.getAllSongs();
     }
 
     public List<Song> searchSongs(String query) throws Exception {
@@ -28,14 +30,31 @@ public class MyTunesManager {
     }
 
     public Song createSongs(Song newSongs) throws Exception {
-        return songDAO.createSongs(newSongs);
+        return myTunesDAO.createSongs(newSongs);
     }
 
     public void updateSongs(Song updatedSong) throws Exception {
-        songDAO.updateSongs(updatedSong);
+        myTunesDAO.updateSongs(updatedSong);
     }
 
     public void deleteSongs(Song selectedSong) throws Exception {
-        songDAO.deleteSongs(selectedSong);
+        myTunesDAO.deleteSongs(selectedSong);
+    }
+
+    // Playlist
+    public List<Playlists> getAllPlaylists() throws Exception {
+        return myTunesDAO.getAllPlaylists();
+    }
+
+    public Playlists createPlaylists(Playlists newPlaylists) throws Exception {
+        return myTunesDAO.createPlaylists(newPlaylists);
+    }
+
+    public void updatePlaylists(Playlists updatedPlaylists) throws Exception {
+        myTunesDAO.updatePlaylists(updatedPlaylists);
+    }
+
+    public void deletePlaylists(Playlists selectedPlaylists) throws Exception {
+        myTunesDAO.deletePlaylists(selectedPlaylists);
     }
 }
