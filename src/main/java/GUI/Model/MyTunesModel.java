@@ -5,17 +5,24 @@ import BE.Song;
 import BLL.MyTunesManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+
+import java.util.List;
 
 public class MyTunesModel {
     private MyTunesManager myTunesManager;
     private ObservableList<Song> songs;
     private ObservableList<Playlists> playlists;
+    private FilteredList<Song> filteredList;
+
+
 
     public MyTunesModel() throws Exception {
         myTunesManager = new MyTunesManager();
         // Insert Songs
         songs = FXCollections.observableArrayList();
         songs.addAll(myTunesManager.getAllSongs());
+        filteredList = new FilteredList<>(songs);
         // Insert Playlists
         playlists = FXCollections.observableArrayList();
         playlists.addAll(myTunesManager.getAllPlaylists());
@@ -29,12 +36,22 @@ public class MyTunesModel {
         return songCreated;
     }
 
+    public void searchSongs(String query) throws Exception{
+        List<Song> searchResults = myTunesManager.searchSongs(query);
+        songs.clear();
+        songs.addAll(searchResults);
+    }
+
+    public FilteredList<Song> getObservableMovies() {
+        return filteredList;
+    }
+
     // read
     public ObservableList<Song> getObservableSongs() {
         return songs;
     }
 
-    // update
+    // update - TODO: Check if working right
     public void updateSongs(Song updatedSong) throws Exception {
         // update song in DAL layer (through the layers)
         myTunesManager.updateSongs(updatedSong);
@@ -68,15 +85,14 @@ public class MyTunesModel {
         return playlists;
     }
 
-    // update
+    // update - TODO: Check if working right
     public void updatePlaylists(Playlists updatedPlaylist) throws Exception {
         // update playlist in DAL layer (through the layers)
         myTunesManager.updatePlaylists(updatedPlaylist);
 
         // update observable list (and UI)
         Playlists p = playlists.get(playlists.indexOf(updatedPlaylist));
-        // TODO: Make Playlists in BE
-        // p.setTitle(updatedPlaylist.getTitle());
+        p.setName(updatedPlaylist.getName());
     }
 
     // delete

@@ -17,6 +17,24 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
     }
 
     // Songs
+    // create
+    @Override
+    public Song createSongs(Song newSong) throws Exception {
+        String sql = "INSERT INTO dbo.Song (Title, Artist, Category, Time) VALUES (?, ?, ?, ?);";
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, newSong.getTitle()); // This is placeholders, 1: Title 2: Artist 3: category 4: time
+            stmt.setString(2, newSong.getArtist());
+            stmt.setString(3, newSong.getCategory());
+            stmt.setDouble(4, newSong.getTime());
+
+            stmt.executeUpdate(); // sends the command to the database
+        }
+        return newSong;
+    }
+
+    // read
     @Override
     public List<Song> getAllSongs() throws Exception {
 
@@ -26,13 +44,13 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
         try (Connection conn = databaseConnector.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            String sql = "SELECT * FROM dbo.songs";
+            String sql = "SELECT * FROM dbo.Song;";
             ResultSet rs = stmt.executeQuery(sql);
 
             // Loop through rows from the database result set
             while (rs.next()) {
                 //Map DB row to Song object
-                int id = rs.getInt("Id");
+                int id = rs.getInt("Song_ID");
                 String title = rs.getString("Title");
                 String artist = rs.getString("Artist");
                 String category = rs.getString("Category");
@@ -50,25 +68,9 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
         }
     }
 
-
-    @Override
-    public Song createSongs(Song newSong) throws Exception {
-        String sql = "INSERT INTO dbo.Song (Title, Artist, Category, Time) VALUES (?, ?, ?, ?)";
-        try (Connection conn = databaseConnector.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, newSong.getTitle()); // det her er placeholders, altså 1: Title 2: Artist 3: category 4: time
-            stmt.setString(2, newSong.getArtist());
-            stmt.setString(3, newSong.getCategory());
-            stmt.setDouble(4, newSong.getTime());
-
-            stmt.executeUpdate(); // sends the command to the database
-        }
-        return newSong;
-    }
-
     @Override
     public void updateSongs(Song song) throws Exception {
-        String sql = "UPDATE Song SET Title = ?, Artist = ?, Category = ?, Time = ? WHERE Id = ?";
+        String sql = "UPDATE dbo.Song SET Title = ?, Artist = ?, Category = ?, Time = ? WHERE Song_ID = ?;";
 
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -77,7 +79,6 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
             stmt.setString(2, song.getArtist());
             stmt.setString(3, song.getCategory());
             stmt.setDouble(4, song.getTime());
-
             stmt.setInt(5, song.getId()); //her identificere vi hvilken row der ska opdateres.
 
             stmt.executeUpdate();
@@ -86,14 +87,13 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
 
     @Override
     public void deleteSongs(Song song) throws Exception {
-        String sql = "DELETE FROM dbo.Song WHERE ID = ?;";
+        String sql = "DELETE FROM dbo.Song WHERE Song_ID = ?;";
 
         try (Connection conn = databaseConnector.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql))
         {
             stmt.setInt(1,song.getId());
-
-          stmt.executeUpdate();
+            stmt.executeUpdate();
         }
         catch (SQLException ex)
         {
@@ -104,8 +104,33 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
     // Playlist
     @Override
     public List<Playlists> getAllPlaylists() throws Exception {
-        // return List.of();
-        throw new UnsupportedOperationException();
+
+        ArrayList<Playlists> allPlaylists = new ArrayList<>();
+
+        // try-with-resources
+        try (Connection conn = databaseConnector.getConnection();
+             Statement stmt = conn.createStatement()) {
+
+            String sql = "SELECT * FROM dbo.Playlist;";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Loop through rows from the database result set
+            while (rs.next()) {
+                //Map DB row to Song object
+                int id = rs.getInt("Playlist_ID");
+                String name = rs.getString("Name");
+                int songs = rs.getInt("Songs");
+                double time = rs.getDouble("Time");
+                Playlists playlist = new Playlists(id, name, songs, time);
+                allPlaylists.add(playlist);
+            }
+            return allPlaylists;
+        }
+
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not get playlists from database", ex);
+        }
     }
 
     @Override

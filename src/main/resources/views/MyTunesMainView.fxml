@@ -48,9 +48,9 @@
 
         <TableView fx:id="tblPlaylists" layoutX="8.0" layoutY="108.0" prefHeight="450.0" prefWidth="270.0">
             <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="colPlaylistName" prefWidth="75.0" text="Name" />
+                <TableColumn fx:id="colPlaylistSongs" prefWidth="75.0" text="Songs" />
+                <TableColumn fx:id="colPlaylistTime" prefWidth="75.0" text="Time" />
             </columns>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
