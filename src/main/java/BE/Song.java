@@ -7,7 +7,7 @@ public class Song {
     private String artist;
     private String category;
     private double time;
-
+    private int nextId;
 
     public Song(int id, String title, String artist, String category, double time) {
         this.id = id;

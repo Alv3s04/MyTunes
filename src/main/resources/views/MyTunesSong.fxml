@@ -13,10 +13,10 @@
       <Label layoutX="14.0" layoutY="90.0" text="Category:" />
       <Label alignment="CENTER_RIGHT" layoutX="14.0" layoutY="160.0" prefHeight="18.0" prefWidth="51.0" text="File:" />
       <Label alignment="CENTER_RIGHT" layoutX="14.0" layoutY="125.0" prefHeight="18.0" prefWidth="51.0" text="Time:" />
-      <TextField fx:id="txtFieldSongTitle" layoutX="72.0" layoutY="16.0" text="Song Title..." />
-      <TextField fx:id="txtFieldTime" layoutX="72.0" layoutY="121.0" prefHeight="18.0" prefWidth="53.0" text="0:00..." />
-      <TextField fx:id="txtFieldArtistName" layoutX="72.0" layoutY="51.0" text="Artist Name..." />
-      <TextField fx:id="txtFieldMP3" layoutX="72.0" layoutY="156.0" text="MP3 File..." />
+      <TextField fx:id="txtFieldSongTitle" layoutX="72.0" layoutY="16.0" promptText="Song Title..." />
+      <TextField fx:id="txtFieldTime" layoutX="72.0" layoutY="121.0" prefHeight="18.0" prefWidth="53.0" promptText="0:00" />
+      <TextField fx:id="txtFieldArtistName" layoutX="72.0" layoutY="51.0" promptText="Artist Name..." />
+      <TextField fx:id="txtFieldMP3" layoutX="72.0" layoutY="156.0" promptText="MP3 File..." />
       <Button layoutX="225.0" layoutY="156.0" mnemonicParsing="false" onAction="#onClickMP3FileChooser" text="Choose..." />
       <Button layoutX="189.0" layoutY="202.0" mnemonicParsing="false" onAction="#onClickCancelSong" text="Cancel" />
       <Button layoutX="248.0" layoutY="202.0" mnemonicParsing="false" onAction="#onClickSaveSong" text="Save" />

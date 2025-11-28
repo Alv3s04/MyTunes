@@ -8,7 +8,7 @@
 <AnchorPane prefHeight="150.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.MyTunesPlaylistController">
    <children>
       <Label layoutX="14.0" layoutY="38.0" text="Name:" />
-      <TextField fx:id="txtFieldPlaylist" layoutX="56.0" layoutY="33.0" prefHeight="26.0" prefWidth="217.0" text="New Playlist..." />
+      <TextField fx:id="txtFieldPlaylist" layoutX="56.0" layoutY="33.0" prefHeight="26.0" prefWidth="217.0" promptText="New Playlist..." />
       <Button layoutX="165.0" layoutY="75.0" mnemonicParsing="false" onAction="#onClickCancelPlaylist" text="Cancel" />
       <Button layoutX="233.0" layoutY="75.0" mnemonicParsing="false" onAction="#onClickSavePlaylist" text="Save" />
    </children>

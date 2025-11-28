@@ -10,12 +10,11 @@ import javafx.collections.transformation.FilteredList;
 import java.util.List;
 
 public class MyTunesModel {
+
     private MyTunesManager myTunesManager;
     private ObservableList<Song> songs;
     private ObservableList<Playlists> playlists;
     private FilteredList<Song> filteredList;
-
-
 
     public MyTunesModel() throws Exception {
         myTunesManager = new MyTunesManager();
@@ -40,10 +39,6 @@ public class MyTunesModel {
         List<Song> searchResults = myTunesManager.searchSongs(query);
         songs.clear();
         songs.addAll(searchResults);
-    }
-
-    public FilteredList<Song> getObservableMovies() {
-        return filteredList;
     }
 
     // read

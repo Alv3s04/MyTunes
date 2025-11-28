@@ -21,18 +21,34 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
     @Override
     public Song createSongs(Song newSong) throws Exception {
         String sql = "INSERT INTO dbo.Song (Title, Artist, Category, Time) VALUES (?, ?, ?, ?);";
+
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setString(1, newSong.getTitle()); // This is placeholders, 1: Title 2: Artist 3: category 4: time
+            // Bind parameters
+            stmt.setString(1, newSong.getTitle());
             stmt.setString(2, newSong.getArtist());
             stmt.setString(3, newSong.getCategory());
             stmt.setDouble(4, newSong.getTime());
 
-            stmt.executeUpdate(); // sends the command to the database
+            // Execute the insert
+            stmt.executeUpdate();
+
+            // Retrieve the auto-generated ID from the database
+            ResultSet rs = stmt.getGeneratedKeys();
+            int id = 0;
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+
+            // Return a new Song object with the correct ID
+            return new Song(id, newSong.getTitle(), newSong.getArtist(), newSong.getCategory(), newSong.getTime());
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not create song", ex);
         }
-        return newSong;
     }
+
 
     // read
     @Override
@@ -79,7 +95,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess {
             stmt.setString(2, song.getArtist());
             stmt.setString(3, song.getCategory());
             stmt.setDouble(4, song.getTime());
-            stmt.setInt(5, song.getId()); //her identificere vi hvilken row der ska opdateres.
+            stmt.setInt(5, song.getId()); // her identificere vi hvilken row der ska opdateres.
 
             stmt.executeUpdate();
         }
