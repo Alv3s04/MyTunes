@@ -116,13 +116,13 @@ public class MyTunesSongController {
     @FXML
     private void onClickSaveSong(ActionEvent actionEvent) {
         try {
-            // 1. Get input from text fields
+            // Get input from text fields
             String title = txtFieldSongTitle.getText().trim();
             String artist = txtFieldArtistName.getText().trim();
             String category = comboBoxGenre.getValue(); // getValue() gives selected item
             double time = Double.parseDouble(txtFieldTime.getText().trim());
 
-            // 2. Validate required fields
+            // Validate required fields
             if (title.isEmpty() || artist.isEmpty() || category == null) {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Missing Fields");
@@ -131,25 +131,21 @@ public class MyTunesSongController {
                 return;
             }
 
-            // 3. Create Song object (ID = 0, DB will generate it)
+            // Create Song object (ID = 0, DB will generate it)
             Song songToSave = new Song(0, title, artist, category, time);
 
-            // 4. Save song via model (adds to observable list automatically)
+            // Save song via model (adds to observable list automatically)
             Song savedSong = model.createSongs(songToSave);
 
-            // 5. Show confirmation
+            // Show confirmation
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Song Saved");
-            alert.setHeaderText("Song successfully saved!");
-            alert.setContentText("ID: " + savedSong.getId() + "\nTitle: " + savedSong.getTitle());
+            alert.setTitle("Song Added");
+            alert.setHeaderText("Song successfully added!");
+            alert.setContentText(savedSong.getTitle() + " by " + savedSong.getArtist() + " has been successfully added.");
             alert.showAndWait();
 
-            // 6. Clear input fields
-            txtFieldSongTitle.clear();
-            txtFieldArtistName.clear();
-            txtFieldTime.clear();
-            txtFieldMP3.clear();
-            comboBoxGenre.getSelectionModel().clearSelection();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.close();
 
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
