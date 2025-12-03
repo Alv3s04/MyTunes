@@ -58,6 +58,8 @@ public class MyTunesMainController implements Initializable {
     private ObservableList<Song> allSongs;
     private MyTunesSearcher searcher;
     private boolean isFilterActive = false;
+    private boolean editMode = false;
+    private MyTunesSongController songController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -76,7 +78,7 @@ public class MyTunesMainController implements Initializable {
         tblSongs.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, selectedSong) ->
         {
             if (selectedSong != null) {
-                lblCurrentlyPlaying.setText(selectedSong.getTitle() + " - " + selectedSong.getArtist());
+                //lblCurrentlyPlaying.setText(selectedSong.getTitle() + " - " + selectedSong.getArtist());
             }
         });
 
@@ -141,20 +143,29 @@ public class MyTunesMainController implements Initializable {
         stage.setScene(scene);
         MyTunesSongController controller = fxmlLoader.getController();
         controller.setModel(myTunesModel);
+
+        setEditingMode(false);
+
         stage.initModality(Modality.APPLICATION_MODAL); // Makes only open one new window
         stage.show();
     }
 
     @FXML
     private void onClickUpdateSong(ActionEvent actionEvent) throws IOException {
+        Song selectedSong = tblSongs.getSelectionModel().getSelectedItem();
+        if (selectedSong == null) return;
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/MyTunesSong.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
 
         stage.setTitle("Edit Song");
         stage.setScene(scene);
+
         MyTunesSongController controller = fxmlLoader.getController();
         controller.setModel(myTunesModel);
+        controller.setEditingSong(selectedSong);
+
         stage.initModality(Modality.APPLICATION_MODAL); // Makes only open one new window
         stage.show();
     }
@@ -242,5 +253,14 @@ public class MyTunesMainController implements Initializable {
     @FXML
     private void onClickPlayPause(ActionEvent actionEvent) {
 
+    }
+
+    // Boolean for get and set editing mode
+    public boolean getMode(){
+        return editMode;
+    }
+
+    public void setEditingMode(boolean editMode){
+        this.editMode = editMode;
     }
 }

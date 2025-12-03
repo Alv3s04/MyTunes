@@ -29,12 +29,9 @@ public class MyTunesSongController {
     private TextField txtFieldArtistName;
 
     private MyTunesModel model;
-    private MyTunesManager myTunesManager;
-    private boolean editMode = false;
     private Song editingSong = null;
-
-    private static final String SONGS_FILE = "data/MP3_Files";
-    private Path filePath = Paths.get(SONGS_FILE);
+    private boolean editMode = false;
+    private MyTunesMainController mainController;
 
     @FXML
     public void initialize() {
@@ -74,13 +71,16 @@ public class MyTunesSongController {
 
     // Called when editing an existing song
     public void setEditingSong(Song song) {
-        this.editingSong = song;// holder på sangen der bliver edited
+        if (song != null) {
+            this.editingSong = song;
+            this.editMode = true;
 
-        txtFieldSongTitle.setText(song.getTitle());
-        txtFieldArtistName.setText(song.getArtist());
-        comboBoxGenre.setValue(song.getCategory());
-        txtFieldTime.setText(String.valueOf(song.getTime()));
-        txtFieldMP3.setText(""); // vores Song class har ik en filepath endnu til vores sange :(
+            txtFieldSongTitle.setText(song.getTitle());
+            txtFieldArtistName.setText(song.getArtist());
+            comboBoxGenre.setValue(song.getCategory());
+            txtFieldTime.setText(String.valueOf(song.getTime()));
+            txtFieldMP3.setText(song.getFilePath()); // TODO: get filepath to edit
+        }
     }
 
     @FXML
@@ -93,7 +93,7 @@ public class MyTunesSongController {
             fileChooser.setInitialDirectory(initialDir);
         } //den viser dig direkte til MP3 mappen
 
-        File file = fileChooser.showOpenDialog(txtFieldMP3.getScene().getWindow());//hvis dialogen og return den valgte fil eller null
+        File file = fileChooser.showOpenDialog(txtFieldMP3.getScene().getWindow());// Vis dialogen og return den valgte fil eller null
 
         if (file != null && file.getName().toLowerCase().endsWith(".mp3")) {
             txtFieldMP3.setText(file.getAbsolutePath()); //hvis vores bruger har valgt en fil, så display dens path
@@ -122,6 +122,7 @@ public class MyTunesSongController {
             String artist = txtFieldArtistName.getText().trim();
             String category = comboBoxGenre.getValue(); // getValue() gives selected item
             double time = Double.parseDouble(txtFieldTime.getText().trim());
+            String mp3Path = txtFieldMP3.getText().trim();
 
             // Validate required fields
             if (title.isEmpty() || artist.isEmpty() || category == null) {
@@ -132,21 +133,37 @@ public class MyTunesSongController {
                 return;
             }
 
-            // Create Song object (ID = 0, DB will generate it)
-            Song songToSave = new Song(0, title, artist, category, time);
+            // Update existing song
+            if (editMode && editingSong != null) {
+                editingSong.setTitle(title);
+                editingSong.setArtist(artist);
+                editingSong.setCategory(category);
+                editingSong.setTime(time);
+                editingSong.setFilePath(mp3Path);
 
-            // Save song via model (adds to observable list automatically)
-            Song savedSong = model.createSongs(songToSave);
+                model.updateSongs(editingSong); // you need this method in your model
 
-            // Show confirmation
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Song Added");
-            alert.setHeaderText("Song successfully added!");
-            alert.setContentText(savedSong.getTitle() + " by " + savedSong.getArtist() + " has been successfully added.");
-            alert.showAndWait();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Song Updated");
+                alert.setHeaderText("Song successfully updated!");
+                alert.setContentText(editingSong.getTitle() + " by " + editingSong.getArtist() + " has been updated.");
+                alert.showAndWait();
+            }
+            // Create song
+            else {
+                Song newSong = new Song(0, title, artist, category, time);// Create Song object (ID = 0, DB will generate it)
+                newSong.setFilePath(mp3Path);
+                model.createSongs(newSong);// Save song via model (adds to observable list automatically)
+                // Show confirmation
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Song Added");
+                alert.setHeaderText("Song successfully added!");
+                alert.setContentText(newSong.getTitle() + " by " + newSong.getArtist() + " has been successfully added.");
+                alert.showAndWait();
 
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.close();
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage.close();
+            }
 
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

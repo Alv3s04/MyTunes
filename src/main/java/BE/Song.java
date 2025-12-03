@@ -7,7 +7,7 @@ public class Song {
     private String artist;
     private String category;
     private double time;
-    private int nextId;
+    private String filePath;
 
     public Song(int id, String title, String artist, String category, double time) {
         this.id = id;
@@ -15,6 +15,7 @@ public class Song {
         this.artist = artist;
         this.category = category;
         this.time = time;
+        this.filePath = ""; // default empty
     }
 
     public String getTitle() {
@@ -31,6 +32,14 @@ public class Song {
 
     public double getTime() {
         return time;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 
     public void setTitle(String title) {
