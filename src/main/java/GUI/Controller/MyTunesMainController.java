@@ -48,11 +48,11 @@ public class MyTunesMainController implements Initializable {
     @FXML
     private TableColumn<Song, Double> colTime;
     @FXML
-    private TableColumn colPlaylistName;
+    private TableColumn<Playlists, String> colPlaylistName;
     @FXML
-    private TableColumn colPlaylistSongs;
+    private TableColumn<Playlists, Integer> colPlaylistSongs;
     @FXML
-    private TableColumn colPlaylistTime;
+    private TableColumn<Playlists, Double> colPlaylistTime;
 
     private MyTunesModel myTunesModel = new MyTunesModel();
     private ObservableList<Song> allSongs;
@@ -146,8 +146,21 @@ public class MyTunesMainController implements Initializable {
     }
 
     @FXML
-    private void onClickUpdateSong(ActionEvent actionEvent) {
+    private void onClickUpdateSong(ActionEvent actionEvent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/MyTunesSong.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
 
+        stage.setTitle("Edit Song");
+        stage.setScene(scene);
+        MyTunesSongController controller = fxmlLoader.getController();
+        controller.setModel(myTunesModel);
+        stage.initModality(Modality.APPLICATION_MODAL); // Makes only open one new window
+        stage.show();
+    }
+
+    private void setModel(MyTunesModel myTunesModel) {
+        this.myTunesModel = myTunesModel;
     }
 
     @FXML

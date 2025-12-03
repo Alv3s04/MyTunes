@@ -30,6 +30,7 @@ public class MyTunesSongController {
 
     private MyTunesModel model;
     private MyTunesManager myTunesManager;
+    private boolean editMode = false;
     private Song editingSong = null;
 
     private static final String SONGS_FILE = "data/MP3_Files";

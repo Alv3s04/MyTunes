@@ -4,13 +4,14 @@ package DAL.db;
 import BE.Playlists;
 import BE.Song;
 import DAL.IMyTunesDataAccess;
+import DAL.IPlaylistDataAccess;
 // Java imports
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyTunesDAO_DB implements IMyTunesDataAccess {
+public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
     private DBConnector databaseConnector = new DBConnector();
 
     public MyTunesDAO_DB() throws IOException {

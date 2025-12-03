@@ -4,6 +4,7 @@ import BE.Playlists;
 import BE.Song;
 import BLL.util.MyTunesSearcher;
 import DAL.IMyTunesDataAccess;
+import DAL.IPlaylistDataAccess;
 import DAL.db.MyTunesDAO_DB;
 
 import java.io.IOException;
@@ -12,10 +13,12 @@ import java.util.List;
 public class MyTunesManager {
 
     private IMyTunesDataAccess myTunesDAO;
+    private IPlaylistDataAccess iPlaylistDataAccess;
     private MyTunesSearcher myTunesSearcher = new MyTunesSearcher();
 
     public MyTunesManager() throws IOException {
         myTunesDAO = new MyTunesDAO_DB();
+        iPlaylistDataAccess = new MyTunesDAO_DB();
     }
 
     // Songs
@@ -43,18 +46,18 @@ public class MyTunesManager {
 
     // Playlist
     public List<Playlists> getAllPlaylists() throws Exception {
-        return myTunesDAO.getAllPlaylists();
+        return iPlaylistDataAccess.getAllPlaylists();
     }
 
     public Playlists createPlaylists(Playlists newPlaylists) throws Exception {
-        return myTunesDAO.createPlaylists(newPlaylists);
+        return iPlaylistDataAccess.createPlaylists(newPlaylists);
     }
 
     public void updatePlaylists(Playlists updatedPlaylists) throws Exception {
-        myTunesDAO.updatePlaylists(updatedPlaylists);
+        iPlaylistDataAccess.updatePlaylists(updatedPlaylists);
     }
 
     public void deletePlaylists(Playlists selectedPlaylists) throws Exception {
-        myTunesDAO.deletePlaylists(selectedPlaylists);
+        iPlaylistDataAccess.deletePlaylists(selectedPlaylists);
     }
 }
