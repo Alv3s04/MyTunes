@@ -52,10 +52,9 @@ public class MyTunesModel {
         myTunesManager.updateSongs(updatedSong);
 
         // update observable list (and UI)
-        Song s = songs.get(songs.indexOf(updatedSong));
-        s.setTitle(updatedSong.getTitle());
-        s.setArtist(updatedSong.getArtist());
-        s.setCategory(updatedSong.getCategory());
+        int index = songs.indexOf(updatedSong);
+        if (index != -1) {
+            songs.set(index, updatedSong);}
     }
 
     // delete

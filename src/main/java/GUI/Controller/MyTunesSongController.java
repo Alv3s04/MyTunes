@@ -154,6 +154,9 @@ public class MyTunesSongController {
                 alert.setHeaderText("Song successfully updated!");
                 alert.setContentText(editingSong.getTitle() + " by " + editingSong.getArtist() + " has been updated.");
                 alert.showAndWait();
+
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage.close();
             }
             // Create song
             else {
