@@ -96,7 +96,13 @@ public class MyTunesSongController {
         File file = fileChooser.showOpenDialog(txtFieldMP3.getScene().getWindow());// Vis dialogen og return den valgte fil eller null
 
         if (file != null && file.getName().toLowerCase().endsWith(".mp3")) {
-            txtFieldMP3.setText(file.getAbsolutePath()); //hvis vores bruger har valgt en fil, så display dens path
+            Path dataFolder = Paths.get("data").toAbsolutePath();
+
+            Path selectedPath = file.toPath().toAbsolutePath();
+
+            Path relativePath = dataFolder.relativize(selectedPath);
+
+            txtFieldMP3.setText(relativePath.toString());
         }  else if (file != null) {
             // User picked a wrong file via some trick
             Alert alert = new Alert(Alert.AlertType.ERROR);

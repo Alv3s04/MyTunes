@@ -17,8 +17,6 @@ public class MyTunesManager {
     private MyTunesSearcher myTunesSearcher = new MyTunesSearcher();
 
     public MyTunesManager() throws IOException {
-        myTunesDAO = new MyTunesDAO_DB();
-        iPlaylistDataAccess = new MyTunesDAO_DB();
     }
 
     // Songs
