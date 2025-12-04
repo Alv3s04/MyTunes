@@ -79,7 +79,9 @@ public class MyTunesMainController implements Initializable {
         tblSongs.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, selectedSong) ->
         {
             if (selectedSong != null) {
-                //lblCurrentlyPlaying.setText(selectedSong.getTitle() + " - " + selectedSong.getArtist());
+                musicPlayer.load(selectedSong.getFilePath()); // assuming Song has getFilePath()
+                musicPlayer.play();
+                lblCurrentlyPlaying.setText(selectedSong.getTitle() + " - " + selectedSong.getArtist());
             }
         });
 
@@ -253,9 +255,9 @@ public class MyTunesMainController implements Initializable {
 
     @FXML
     private void onClickPlayPause(ActionEvent actionEvent) {
-        if(musicPlayer.isPlaying()){
+        if (musicPlayer.isPlaying()) {
             musicPlayer.pause();
-        }else{
+        } else {
             musicPlayer.play();
         }
     }

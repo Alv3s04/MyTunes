@@ -5,22 +5,21 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.Media;
 
 import java.io.File;
-import java.time.Duration;
+import javafx.util.Duration;
 
 public class MusicPlayer {
     private MediaPlayer mediaPlayer;
     public MusicPlayer(){
-
     }
 
-    public void playSong(Song song) {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
+    public void load(String filePath) {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            System.out.println("File not found: " + file.getAbsolutePath());
+            return;
         }
-
-        File songFile = new File(song.getFilePath());
-        Media media = new Media(songFile.toURI().toString());
-        mediaPlayer = new MediaPlayer(media);
+        Media media = new Media(file.toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
     }
 
@@ -52,7 +51,7 @@ public class MusicPlayer {
         }
     }
 
-    public Duration getCurrentTime(){
-        return mediaPlayer != null ? Duration.ofMillis((long) mediaPlayer.getCurrentTime().toMillis()) : null;
+    public Duration getCurrentTime() {
+        return mediaPlayer != null ? mediaPlayer.getCurrentTime() : Duration.ZERO;
     }
 }
