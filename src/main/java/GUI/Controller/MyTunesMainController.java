@@ -4,6 +4,7 @@ import BE.Playlists;
 import BE.Song;
 import BLL.util.MyTunesSearcher;
 import GUI.Model.MyTunesModel;
+import GUI.util.MusicPlayer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
@@ -54,12 +55,12 @@ public class MyTunesMainController implements Initializable {
     @FXML
     private TableColumn<Playlists, Double> colPlaylistTime;
 
-    private MyTunesModel myTunesModel = new MyTunesModel();
+    private MyTunesModel myTunesModel;
+    private MusicPlayer musicPlayer = new MusicPlayer();
     private ObservableList<Song> allSongs;
     private MyTunesSearcher searcher;
     private boolean isFilterActive = false;
     private boolean editMode = false;
-    private MyTunesSongController songController;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -110,7 +111,7 @@ public class MyTunesMainController implements Initializable {
     @FXML
     private void onClickSearchClear(ActionEvent actionEvent) {
 
-        // CLEAR FILTER
+        // Clear
         if (isFilterActive) {
             tblSongs.setItems(allSongs);
             txtFieldSearch.clear();
@@ -119,7 +120,7 @@ public class MyTunesMainController implements Initializable {
             return;
         }
 
-        // APPLY FILTER
+        // Apply filter
         String query = txtFieldSearch.getText().trim();
         if (query.isEmpty()) {
             return; // nothing typed
@@ -252,11 +253,15 @@ public class MyTunesMainController implements Initializable {
 
     @FXML
     private void onClickPlayPause(ActionEvent actionEvent) {
-
+        if(musicPlayer.isPlaying()){
+            musicPlayer.pause();
+        }else{
+            musicPlayer.play();
+        }
     }
 
     // Boolean for get and set editing mode
-    public boolean getMode(){
+    public boolean getEditingMode(){
         return editMode;
     }
 
