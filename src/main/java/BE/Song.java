@@ -9,13 +9,13 @@ public class Song {
     private double time;
     private String filePath;
 
-    public Song(int id, String title, String artist, String category, double time) {
+    public Song(int id, String title, String artist, String category, double time, String filePath) {
         this.id = id;
         this.title = title;
         this.artist = artist;
         this.category = category;
         this.time = time;
-        this.filePath = ""; // default empty
+        this.filePath = filePath;
     }
 
     public String getTitle() {
@@ -60,7 +60,7 @@ public class Song {
 
     @Override
     public String toString() {
-        return id + ": " + title + " " + artist + " " + category + " (" + time + ")";
+        return id + ": " + title + " " + artist + " " + category + " " + " (" + time + ") "+ " " + filePath;
     }
 
     public int getId() {

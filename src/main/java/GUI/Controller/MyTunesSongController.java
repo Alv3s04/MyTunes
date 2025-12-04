@@ -79,7 +79,7 @@ public class MyTunesSongController {
             txtFieldArtistName.setText(song.getArtist());
             comboBoxGenre.setValue(song.getCategory());
             txtFieldTime.setText(String.valueOf(song.getTime()));
-            txtFieldMP3.setText(song.getFilePath()); // TODO: get filepath to edit
+            txtFieldMP3.setText(song.getFilePath());
         }
     }
 
@@ -122,7 +122,7 @@ public class MyTunesSongController {
             String artist = txtFieldArtistName.getText().trim();
             String category = comboBoxGenre.getValue(); // getValue() gives selected item
             double time = Double.parseDouble(txtFieldTime.getText().trim());
-            String mp3Path = txtFieldMP3.getText().trim();
+            String filePath = txtFieldMP3.getText().trim();
 
             // Validate required fields
             if (title.isEmpty() || artist.isEmpty() || category == null) {
@@ -139,7 +139,7 @@ public class MyTunesSongController {
                 editingSong.setArtist(artist);
                 editingSong.setCategory(category);
                 editingSong.setTime(time);
-                editingSong.setFilePath(mp3Path);
+                editingSong.setFilePath(filePath);
 
                 model.updateSongs(editingSong); // you need this method in your model
 
@@ -151,8 +151,8 @@ public class MyTunesSongController {
             }
             // Create song
             else {
-                Song newSong = new Song(0, title, artist, category, time);// Create Song object (ID = 0, DB will generate it)
-                newSong.setFilePath(mp3Path);
+                Song newSong = new Song(0, title, artist, category, time, filePath);// Create Song object (ID = 0, DB will generate it)
+                newSong.setFilePath(filePath);
                 model.createSongs(newSong);// Save song via model (adds to observable list automatically)
                 // Show confirmation
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

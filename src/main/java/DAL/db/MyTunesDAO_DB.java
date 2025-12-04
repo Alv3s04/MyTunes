@@ -21,7 +21,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
     // create
     @Override
     public Song createSongs(Song newSong) throws Exception {
-        String sql = "INSERT INTO dbo.Song (Title, Artist, Category, Time) VALUES (?, ?, ?, ?);";
+        String sql = "INSERT INTO dbo.Song (Title, Artist, Category, Time, FilePath) VALUES (?, ?, ?, ?, ?);";
 
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -31,6 +31,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
             stmt.setString(2, newSong.getArtist());
             stmt.setString(3, newSong.getCategory());
             stmt.setDouble(4, newSong.getTime());
+            stmt.setString(5, newSong.getFilePath());
 
             // Execute the insert
             stmt.executeUpdate();
@@ -43,7 +44,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
             }
 
             // Return a new Song object with the correct ID
-            return new Song(id, newSong.getTitle(), newSong.getArtist(), newSong.getCategory(), newSong.getTime());
+            return new Song(id, newSong.getTitle(), newSong.getArtist(), newSong.getCategory(), newSong.getTime(), newSong.getFilePath());
         } catch (SQLException ex) {
             ex.printStackTrace();
             throw new Exception("Could not create song", ex);
@@ -72,8 +73,9 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
                 String artist = rs.getString("Artist");
                 String category = rs.getString("Category");
                 double time = rs.getDouble("Time");
+                String filePath = rs.getString("FilePath");
 
-                Song song = new Song(id, title, artist, category, time);
+                Song song = new Song(id, title, artist, category, time, filePath);
                 allSongs.add(song);
             }
             return allSongs;
