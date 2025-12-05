@@ -61,6 +61,7 @@ public class MyTunesMainController implements Initializable {
     private MyTunesSearcher searcher;
     private boolean isFilterActive = false;
     private boolean editMode = false;
+    private Song currentlyPlayingSong = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -76,12 +77,11 @@ public class MyTunesMainController implements Initializable {
         tblPlaylists.setItems(myTunesModel.getObservablePlaylists());
         allSongs = myTunesModel.getObservableSongs();
 
-        tblSongs.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, selectedSong) ->
+        tblSongs.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newSong) ->
         {
-            if (selectedSong != null) {
-                musicPlayer.load(selectedSong.getFilePath()); // assuming Song has getFilePath()
-                musicPlayer.play();
-                lblCurrentlyPlaying.setText(selectedSong.getTitle() + " - " + selectedSong.getArtist());
+            if (newSong != null) {
+                lblCurrentlyPlaying.setText(newSong.getTitle() + " - " + newSong.getArtist());
+
             }
         });
 
@@ -255,12 +255,24 @@ public class MyTunesMainController implements Initializable {
 
     @FXML
     private void onClickPlayPause(ActionEvent actionEvent) {
-        if (musicPlayer.isPlaying()) {
-            musicPlayer.pause();
-        } else {
+        Song selectedSong = tblSongs.getSelectionModel().getSelectedItem();
+        if (selectedSong == null) return; // nothing selected
+
+        if (currentlyPlayingSong != selectedSong) {
+            musicPlayer.stop();
+            musicPlayer.load(selectedSong.getFilePath());
             musicPlayer.play();
+
+            currentlyPlayingSong = selectedSong; // update tracker
+
+            lblCurrentlyPlaying.setText(selectedSong.getTitle() + " - " + selectedSong.getArtist());
+            return;
         }
+
+        if (musicPlayer.isPlaying()) musicPlayer.pause();
+        else musicPlayer.play();
     }
+
 
     // Boolean for get and set editing mode
     public boolean getEditingMode(){

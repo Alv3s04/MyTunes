@@ -5,6 +5,9 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.Media;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import javafx.util.Duration;
 
 public class MusicPlayer {
@@ -13,15 +16,16 @@ public class MusicPlayer {
     }
 
     public void load(String filePath) {
-        File file = new File(filePath);
+        Path path = Paths.get("data", filePath).toAbsolutePath();
+        File file = path.toFile();
         if (!file.exists()) {
-            System.out.println("File not found: " + file.getAbsolutePath());
-            return;
+
+                System.out.println("File not found: " + path);
+                return;
+            }
+            Media media = new Media(file.toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
         }
-        Media media = new Media(file.toURI().toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.play();
-    }
 
     public void play(){
         if (mediaPlayer != null) {
