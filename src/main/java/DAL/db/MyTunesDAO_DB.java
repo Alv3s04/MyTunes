@@ -153,16 +153,76 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
 
     @Override
     public Playlists createPlaylists(Playlists newPlaylist) throws Exception {
-        return null;
+        String sql = "INSERT INTO dbo.Playlist (Name, Songs, Time) VALUES (?, ?, ?);";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            // Bind parameters
+            stmt.setString(1, newPlaylist.getName());
+            stmt.setInt(2, newPlaylist.getSongs());
+            stmt.setDouble(3, newPlaylist.getPlaylistTime());
+
+            // Execute the insert
+            stmt.executeUpdate();
+
+            // Retrieve the auto-generated ID from the database
+            ResultSet rs = stmt.getGeneratedKeys();
+            int id = 0;
+            if (rs.next()) {
+                id = rs.getInt(1);
+            }
+
+            // Return a new Playlists object with the correct ID
+            return new Playlists(id, newPlaylist.getName(), newPlaylist.getSongs(), newPlaylist.getPlaylistTime());
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not create playlist", ex);
+        }
     }
 
     @Override
-    public void updatePlaylists(Playlists playlists) throws Exception {
+    public void updatePlaylists(Playlists playlist) throws Exception {
+        String sql = "UPDATE dbo.Playlist SET Name = ?, Songs = ?, Time = ? WHERE Playlist_ID = ?;";
 
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            // Bind parameters
+            stmt.setString(1, playlist.getName());
+            stmt.setInt(2, playlist.getSongs());
+            stmt.setDouble(3, playlist.getPlaylistTime());
+            stmt.setInt(4, playlist.getId()); // Identify which row to update
+
+            // Execute update
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new Exception("Updating playlist failed, no rows affected.");
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not update playlist", ex);
+        }
     }
 
     @Override
-    public void deletePlaylists(Playlists playlists) throws Exception {
+    public void deletePlaylists(Playlists playlist) throws Exception {
+        String sql = "DELETE FROM dbo.Playlist WHERE Playlist_ID = ?;";
 
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, playlist.getId());
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new Exception("Deleting playlist failed, no rows affected.");
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not delete playlist", ex);
+        }
     }
 }

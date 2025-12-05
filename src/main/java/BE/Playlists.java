@@ -44,7 +44,7 @@ public class Playlists {
         return id + ": " + name + " " + songs + " (" + time + ")";
     }
 
-    public int getPlaylistId() {
+    public int getId() {
         return id;
     }
 }

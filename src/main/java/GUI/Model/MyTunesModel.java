@@ -69,10 +69,16 @@ public class MyTunesModel {
     // Playlist
     // create
     public Playlists createPlaylists(Playlists newPlaylist) throws Exception {
+        System.out.println("Trying to create playlist: " + newPlaylist.getName());
         Playlists playlistCreated = myTunesManager.createPlaylists(newPlaylist);
+        if (playlistCreated == null) {
+            System.out.println("MyTunesManager returned null!");
+            throw new Exception("Failed to create playlist in DB");
+        }
         playlists.add(playlistCreated);
         return playlistCreated;
     }
+
 
     // read
     public ObservableList<Playlists> getObservablePlaylists() {
@@ -85,8 +91,10 @@ public class MyTunesModel {
         myTunesManager.updatePlaylists(updatedPlaylist);
 
         // update observable list (and UI)
-        Playlists p = playlists.get(playlists.indexOf(updatedPlaylist));
-        p.setName(updatedPlaylist.getName());
+        int index = playlists.indexOf(updatedPlaylist);
+        if (index >= 0) {
+            playlists.set(index, updatedPlaylist);
+        }
     }
 
     // delete

@@ -12,7 +12,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.MyTunesMainController">
     <children>
-        <Label fx:id="lblCurrentlyPlaying" layoutX="389.0" layoutY="21.0" text="(none) ... is playing">
+        <Label fx:id="lblCurrentlyPlaying" alignment="CENTER" layoutX="268.0" layoutY="21.0" prefHeight="26.0" prefWidth="374.0" text="(none) ... is playing">
             <font>
                 <Font size="16.0" />
             </font></Label>
@@ -72,7 +72,7 @@
             </columnResizePolicy>
         </TableView>
 
-        <ListView layoutX="287.0" layoutY="108.0" prefHeight="450.0" prefWidth="155.0" />
+        <ListView fx:id="lvSongsOnPlaylist" layoutX="287.0" layoutY="108.0" prefHeight="450.0" prefWidth="155.0" />
         <Label fx:id="lblTimer" layoutX="401.0" layoutY="45.0" text="Timer (0:00 / [Time])" />
     </children>
 </AnchorPane>
