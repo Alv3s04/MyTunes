@@ -108,49 +108,16 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
         String sql = "DELETE FROM dbo.Song WHERE Song_ID = ?;";
 
         try (Connection conn = databaseConnector.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql))
-        {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1,song.getId());
             stmt.executeUpdate();
-        }
-        catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new Exception("Could not get songs from database.",ex);
         }
     }
 
     // Playlist
-    @Override
-    public List<Playlists> getAllPlaylists() throws Exception {
-
-        ArrayList<Playlists> allPlaylists = new ArrayList<>();
-
-        // try-with-resources
-        try (Connection conn = databaseConnector.getConnection();
-             Statement stmt = conn.createStatement()) {
-
-            String sql = "SELECT * FROM dbo.Playlist;";
-            ResultSet rs = stmt.executeQuery(sql);
-
-            // Loop through rows from the database result set
-            while (rs.next()) {
-                //Map DB row to Song object
-                int id = rs.getInt("Playlist_ID");
-                String name = rs.getString("Name");
-                int songs = rs.getInt("Songs");
-                double time = rs.getDouble("Time");
-                Playlists playlist = new Playlists(id, name, songs, time);
-                allPlaylists.add(playlist);
-            }
-            return allPlaylists;
-        }
-
-        catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new Exception("Could not get playlists from database", ex);
-        }
-    }
-
     @Override
     public Playlists createPlaylists(Playlists newPlaylist) throws Exception {
         String sql = "INSERT INTO dbo.Playlist (Name, Songs, Time) VALUES (?, ?, ?);";
@@ -183,6 +150,37 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
     }
 
     @Override
+    public List<Playlists> getAllPlaylists() throws Exception {
+
+        ArrayList<Playlists> allPlaylists = new ArrayList<>();
+
+        // try-with-resources
+        try (Connection conn = databaseConnector.getConnection();
+             Statement stmt = conn.createStatement()) {
+
+            String sql = "SELECT * FROM dbo.Playlist;";
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // Loop through rows from the database result set
+            while (rs.next()) {
+                //Map DB row to Song object
+                int id = rs.getInt("Playlist_ID");
+                String name = rs.getString("Name");
+                int songs = rs.getInt("Songs");
+                double time = rs.getDouble("Time");
+                Playlists playlist = new Playlists(id, name, songs, time);
+                allPlaylists.add(playlist);
+            }
+            return allPlaylists;
+        }
+
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not get playlists from database", ex);
+        }
+    }
+
+    @Override
     public void updatePlaylists(Playlists playlist) throws Exception {
         String sql = "UPDATE dbo.Playlist SET Name = ?, Songs = ?, Time = ? WHERE Playlist_ID = ?;";
 
@@ -196,14 +194,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
             stmt.setInt(4, playlist.getId()); // Identify which row to update
 
             // Execute update
-            int affectedRows = stmt.executeUpdate();
-            if (affectedRows == 0) {
-                throw new Exception("Updating playlist failed, no rows affected.");
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new Exception("Could not update playlist", ex);
+            stmt.executeUpdate();
         }
     }
 
@@ -213,13 +204,8 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
 
         try (Connection conn = databaseConnector.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setInt(1, playlist.getId());
-            int affectedRows = stmt.executeUpdate();
-            if (affectedRows == 0) {
-                throw new Exception("Deleting playlist failed, no rows affected.");
-            }
-
+            stmt.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
             throw new Exception("Could not delete playlist", ex);
