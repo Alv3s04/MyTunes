@@ -7,7 +7,6 @@ import GUI.Model.MyTunesModel;
 import GUI.util.MusicPlayer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +20,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -36,6 +36,8 @@ public class MyTunesMainController implements Initializable {
     private Button btnSearchClear;
     @FXML
     private Slider volumeSlider;
+    @FXML
+    private ListView<Song> lvSongsOnPlaylist;
     @FXML
     private TableView<Playlists> tblPlaylists;
     @FXML
@@ -60,8 +62,6 @@ public class MyTunesMainController implements Initializable {
     private ObservableList<Song> allSongs;
     private MyTunesSearcher searcher;
     private boolean isFilterActive = false;
-    private boolean editMode = false;
-    private Song currentlyPlayingSong = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -72,10 +72,6 @@ public class MyTunesMainController implements Initializable {
         colPlaylistName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colPlaylistSongs.setCellValueFactory(new PropertyValueFactory<>("songs"));
         colPlaylistTime.setCellValueFactory(new PropertyValueFactory<>("time"));
-
-        tblSongs.setItems(myTunesModel.getObservableSongs());
-        tblPlaylists.setItems(myTunesModel.getObservablePlaylists());
-        allSongs = myTunesModel.getObservableSongs();
 
         tblSongs.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, newSong) ->
         {
@@ -93,14 +89,13 @@ public class MyTunesMainController implements Initializable {
         });
     }
 
-    public MyTunesMainController() throws Exception {
-        try{
-            myTunesModel = new MyTunesModel();
-            searcher = new MyTunesSearcher();
-        } catch (Exception e) {
-            displayError(e);
-            e.printStackTrace();
-        }
+    public void setModel(MyTunesModel model) {
+        this.myTunesModel = model;
+        this.searcher = new MyTunesSearcher();
+
+        tblSongs.setItems(model.getObservableSongs());
+        tblPlaylists.setItems(model.getObservablePlaylists());
+        allSongs = model.getObservableSongs();
     }
 
     private void displayError(Throwable t) {
@@ -146,9 +141,6 @@ public class MyTunesMainController implements Initializable {
         stage.setScene(scene);
         MyTunesSongController controller = fxmlLoader.getController();
         controller.setModel(myTunesModel);
-
-        setEditingMode(false);
-
         stage.initModality(Modality.APPLICATION_MODAL); // Makes only open one new window
         stage.show();
     }
@@ -161,20 +153,13 @@ public class MyTunesMainController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/MyTunesSong.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         Stage stage = new Stage();
-
         stage.setTitle("Edit Song");
         stage.setScene(scene);
-
         MyTunesSongController controller = fxmlLoader.getController();
         controller.setModel(myTunesModel);
         controller.setEditingSong(selectedSong);
-
-        stage.initModality(Modality.APPLICATION_MODAL); // Makes only open one new window
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.show();
-    }
-
-    private void setModel(MyTunesModel myTunesModel) {
-        this.myTunesModel = myTunesModel;
     }
 
     @FXML
@@ -193,7 +178,14 @@ public class MyTunesMainController implements Initializable {
 
     @FXML
     private void onClickMoveSongToPlaylist(ActionEvent actionEvent) {
+        Song selectedSong = tblSongs.getSelectionModel().getSelectedItem();
+        if (selectedSong == null) return;
 
+        ObservableList<Song> playlistItems = lvSongsOnPlaylist.getItems();
+
+        playlistItems.add(selectedSong);
+
+        lvSongsOnPlaylist.getSelectionModel().select(selectedSong);
     }
 
     @FXML
@@ -217,29 +209,72 @@ public class MyTunesMainController implements Initializable {
     }
 
     @FXML
-    private void onClickUpdatePlaylist(ActionEvent actionEvent) {
+    private void onClickUpdatePlaylist(ActionEvent actionEvent) throws IOException {
+        Playlists selectedPlaylist = tblPlaylists.getSelectionModel().getSelectedItem();
+        if (selectedPlaylist == null) return;
 
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/views/MyTunesPlaylist.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = new Stage();
+
+        stage.setTitle("Rename Playlist");
+        stage.setScene(scene);
+
+        MyTunesPlaylistController controller = fxmlLoader.getController();
+        controller.setModel(myTunesModel);
+        controller.setEditingPlaylist(selectedPlaylist);
+
+        stage.initModality(Modality.APPLICATION_MODAL); // Makes only open one new window
+        stage.show();
     }
 
     @FXML
     private void onClickDeletePlaylist(ActionEvent actionEvent) {
+        Playlists selectedPlaylists = tblPlaylists.getSelectionModel().getSelectedItem();
 
+        if(selectedPlaylists != null) {
+            try {
+                myTunesModel.deletePlaylists(selectedPlaylists);
+            }
+            catch (Exception err) {
+                displayError(err);
+            }
+        }
     }
 
     // Songs on Playlist
     @FXML
     private void onClickScrollUp(ActionEvent actionEvent) {
+        {
+            int index = lvSongsOnPlaylist.getSelectionModel().getSelectedIndex();
+            if (index <= 0) return;
 
+            ObservableList<Song> items = lvSongsOnPlaylist.getItems();
+
+            Collections.swap(items, index, index - 1);
+
+            lvSongsOnPlaylist.getSelectionModel().select(index - 1);
+        }
     }
 
     @FXML
     private void onClickScrollDown(ActionEvent actionEvent) {
+        ObservableList<Song> items = lvSongsOnPlaylist.getItems();
+        int index = lvSongsOnPlaylist.getSelectionModel().getSelectedIndex();
 
+        if (index == -1 || index >= items.size() - 1) return;
+
+        Collections.swap(items, index, index + 1);
+
+        lvSongsOnPlaylist.getSelectionModel().select(index + 1);
     }
 
     @FXML
     private void onClickDeleteSongInPlaylist(ActionEvent actionEvent) {
+        Song selectedSong = lvSongsOnPlaylist.getSelectionModel().getSelectedItem();
+        if (selectedSong == null) return;
 
+        lvSongsOnPlaylist.getItems().remove(selectedSong);
     }
 
     // Playing music management
@@ -271,15 +306,5 @@ public class MyTunesMainController implements Initializable {
 
         if (musicPlayer.isPlaying()) musicPlayer.pause();
         else musicPlayer.play();
-    }
-
-
-    // Boolean for get and set editing mode
-    public boolean getEditingMode(){
-        return editMode;
-    }
-
-    public void setEditingMode(boolean editMode){
-        this.editMode = editMode;
     }
 }

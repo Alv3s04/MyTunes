@@ -1,7 +1,6 @@
 package GUI.Controller;
 
 import BE.Song;
-import BLL.MyTunesManager;
 import GUI.Model.MyTunesModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,7 +30,6 @@ public class MyTunesSongController {
     private MyTunesModel model;
     private Song editingSong = null;
     private boolean editMode = false;
-    private MyTunesMainController mainController;
 
     @FXML
     public void initialize() {
@@ -139,7 +137,7 @@ public class MyTunesSongController {
                 return;
             }
 
-            // Update existing song
+            // Update existing song only when editMode is true
             if (editMode && editingSong != null) {
                 editingSong.setTitle(title);
                 editingSong.setArtist(artist);
@@ -147,7 +145,7 @@ public class MyTunesSongController {
                 editingSong.setTime(time);
                 editingSong.setFilePath(filePath);
 
-                model.updateSongs(editingSong); // you need this method in your model
+                model.updateSongs(editingSong);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Song Updated");

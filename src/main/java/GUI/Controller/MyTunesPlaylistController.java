@@ -1,7 +1,6 @@
 package GUI.Controller;
 
 import BE.Playlists;
-import BE.Song;
 import GUI.Model.MyTunesModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,14 +10,26 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class MyTunesPlaylistController {
+
     @FXML
     private TextField txtFieldPlaylist;
 
     private MyTunesModel model;
+    private Playlists editingPlaylist = null;
+    private boolean editMode = false;
 
     // Called by main controller
     public void setModel(MyTunesModel model) {
-        this.model = model; //denne metode kommer til interact med songs NÅRR vi har en filepath og ka bruge songs
+        this.model = model;
+    }
+
+    // Called when editing an existing playlist
+    public void setEditingPlaylist(Playlists playlists) {
+        if (playlists != null) {
+            this.editingPlaylist = playlists;
+            this.editMode = true;
+            txtFieldPlaylist.setText(playlists.getName());
+        }
     }
 
     @FXML
@@ -43,23 +54,39 @@ public class MyTunesPlaylistController {
                 return;
             }
 
-            // Create Song object (ID = 0, DB will generate it)
-            int songs = 0;
-            double time = 0.0;
-            Playlists playlistsToSave = new Playlists(0, name, songs, time);
+            // Update existing playlist
+            if (editMode && editingPlaylist != null) {
+                editingPlaylist.setName(name);
 
-            // Save song via model (adds to observable list automatically)
-            Playlists savedPlaylist = model.createPlaylists(playlistsToSave);
+                model.updatePlaylists(editingPlaylist);
 
-            // Show confirmation
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Playlist Added");
-            alert.setHeaderText("Playlist successfully added!");
-            alert.setContentText(savedPlaylist.getName() + " has been successfully added.");
-            alert.showAndWait();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Playlist Updated");
+                alert.setHeaderText("Playlist successfully updated!");
+                alert.setContentText(editingPlaylist.getName() + " has been updated.");
+                alert.showAndWait();
 
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.close();
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage.close();
+            } else{
+                // Create Song object (ID = 0, DB will generate it)
+                int songs = 0;
+                double time = 0.0;
+                Playlists playlistsToSave = new Playlists(0, name, songs, time);
+
+                // Save song via model (adds to observable list automatically)
+                Playlists savedPlaylist = model.createPlaylists(playlistsToSave);
+
+                // Show confirmation
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Playlist Added");
+                alert.setHeaderText("Playlist successfully added!");
+                alert.setContentText(savedPlaylist.getName() + " has been successfully added.");
+                alert.showAndWait();
+
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage.close();
+            }
 
         } catch (Exception e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
