@@ -1,22 +1,23 @@
 package DAL.db;
 
-// Project imports
 import BE.Playlists;
 import BE.Song;
-import DAL.IMyTunesDataAccess;
+import DAL.ISongDataAccess;
 import DAL.IPlaylistDataAccess;
-// Java imports
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
+public class MyTunesDAO_DB implements ISongDataAccess, IPlaylistDataAccess {
+
     private DBConnector databaseConnector = new DBConnector();
 
     public MyTunesDAO_DB() throws IOException {
     }
-    // Songs
+
+    // SONGS
     // create
     @Override
     public Song createSongs(Song newSong) throws Exception {
@@ -49,7 +50,6 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
             throw new Exception("Could not create song", ex);
         }
     }
-
 
     // read
     @Override
@@ -86,6 +86,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
         }
     }
 
+    // update
     @Override
     public void updateSongs(Song song) throws Exception {
         String sql = "UPDATE dbo.Song SET Title = ?, Artist = ?, Category = ?, Time = ? WHERE Song_ID = ?;";
@@ -103,6 +104,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
         }
     }
 
+    // delete
     @Override
     public void deleteSongs(Song song) throws Exception {
         String sql = "DELETE FROM dbo.Song WHERE Song_ID = ?;";
@@ -117,7 +119,8 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
         }
     }
 
-    // Playlist
+    // PLAYLIST
+    // create
     @Override
     public Playlists createPlaylists(Playlists newPlaylist) throws Exception {
         String sql = "INSERT INTO dbo.Playlist (Name, Songs, Time) VALUES (?, ?, ?);";
@@ -128,7 +131,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
             // Bind parameters
             stmt.setString(1, newPlaylist.getName());
             stmt.setInt(2, newPlaylist.getSongs());
-            stmt.setDouble(3, newPlaylist.getPlaylistTime());
+            stmt.setDouble(3, newPlaylist.getTime());
 
             // Execute the insert
             stmt.executeUpdate();
@@ -141,7 +144,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
             }
 
             // Return a new Playlists object with the correct ID
-            return new Playlists(id, newPlaylist.getName(), newPlaylist.getSongs(), newPlaylist.getPlaylistTime());
+            return new Playlists(id, newPlaylist.getName(), newPlaylist.getSongs(), newPlaylist.getTime());
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -149,6 +152,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
         }
     }
 
+    // read
     @Override
     public List<Playlists> getAllPlaylists() throws Exception {
 
@@ -173,13 +177,13 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
             }
             return allPlaylists;
         }
-
         catch (SQLException ex) {
             ex.printStackTrace();
             throw new Exception("Could not get playlists from database", ex);
         }
     }
 
+    // update
     @Override
     public void updatePlaylists(Playlists playlist) throws Exception {
         String sql = "UPDATE dbo.Playlist SET Name = ?, Songs = ?, Time = ? WHERE Playlist_ID = ?;";
@@ -190,7 +194,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
             // Bind parameters
             stmt.setString(1, playlist.getName());
             stmt.setInt(2, playlist.getSongs());
-            stmt.setDouble(3, playlist.getPlaylistTime());
+            stmt.setDouble(3, playlist.getTime());
             stmt.setInt(4, playlist.getId()); // Identify which row to update
 
             // Execute update
@@ -198,6 +202,7 @@ public class MyTunesDAO_DB implements IMyTunesDataAccess, IPlaylistDataAccess {
         }
     }
 
+    // delete
     @Override
     public void deletePlaylists(Playlists playlist) throws Exception {
         String sql = "DELETE FROM dbo.Playlist WHERE Playlist_ID = ?;";

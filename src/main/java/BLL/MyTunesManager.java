@@ -3,16 +3,21 @@ package BLL;
 import BE.Playlists;
 import BE.Song;
 import BLL.util.MyTunesSearcher;
-import DAL.IMyTunesDataAccess;
+import DAL.ISongDataAccess;
 import DAL.IPlaylistDataAccess;
 import DAL.db.MyTunesDAO_DB;
 
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The manager class for MyTunes.
+ * Handles CRUD operations for songs and playlists,
+ * and provides search functionality for songs.
+ */
 public class MyTunesManager {
 
-    private IMyTunesDataAccess myTunesDAO;
+    private ISongDataAccess myTunesDAO;
     private IPlaylistDataAccess iPlaylistDataAccess;
     private MyTunesSearcher myTunesSearcher = new MyTunesSearcher();
 

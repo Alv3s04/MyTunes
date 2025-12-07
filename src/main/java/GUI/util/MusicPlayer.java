@@ -1,14 +1,11 @@
 package GUI.util;
 
-import BE.Song;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.Media;
-
+import javafx.util.Duration;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import javafx.util.Duration;
 
 public class MusicPlayer {
     private MediaPlayer mediaPlayer;
@@ -19,7 +16,6 @@ public class MusicPlayer {
         Path path = Paths.get("data", filePath).toAbsolutePath();
         File file = path.toFile();
         if (!file.exists()) {
-
                 System.out.println("File not found: " + path);
                 return;
             }

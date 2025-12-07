@@ -3,71 +3,100 @@ package GUI.Model;
 import BE.Playlists;
 import BE.Song;
 import BLL.MyTunesManager;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-
 import java.util.List;
 
+/**
+ * The model class for MyTunes.
+ * Acts as an intermediary between the UI controllers and the business logic layer (MyTunesManager).
+ * Maintains observable lists of songs and playlists for automatic UI updates.
+ */
 public class MyTunesModel {
 
-    private MyTunesManager myTunesManager;
-    private ObservableList<Song> songs;
-    private ObservableList<Playlists> playlists;
-    private FilteredList<Song> filteredList;
+    private MyTunesManager myTunesManager; // Reference to business logic manager
+    private ObservableList<Song> songs; // Observable list of all songs
+    private ObservableList<Playlists> playlists; // Observable list of all playlists
+    private FilteredList<Song> filteredList; // Filtered view of songs for search/filtering
 
+    /**
+     * Constructor initializes the model and loads all songs and playlists from the manager.
+     * @throws Exception if data retrieval from MyTunesManager fails.
+     */
     public MyTunesModel() throws Exception {
         myTunesManager = new MyTunesManager();
-        // Insert Songs
+
+        // Load all songs from manager
         songs = FXCollections.observableArrayList();
         songs.addAll(myTunesManager.getAllSongs());
         filteredList = new FilteredList<>(songs);
-        // Insert Playlists
+
+        // Load all playlists from manager
         playlists = FXCollections.observableArrayList();
         playlists.addAll(myTunesManager.getAllPlaylists());
     }
 
-    // Songs
-    // create
+    // SONGS
+    /**
+     * Creates a new song and adds it to the observable list.
+     * @return The newly created Song object.
+     * @throws Exception if creation in MyTunesManager fails.
+     */
     public Song createSongs(Song newSong) throws Exception {
         Song songCreated = myTunesManager.createSongs(newSong);
-        songs.add(songCreated);
+        songs.add(songCreated); // Add to observable list for UI
         return songCreated;
     }
 
-    public void searchSongs(String query) throws Exception{
+    /**
+     * Searches songs based on a query and updates the observable list.
+     * @throws Exception if search in MyTunesManager fails.
+     */
+    public void searchSongs(String query) throws Exception {
         List<Song> searchResults = myTunesManager.searchSongs(query);
         songs.clear();
-        songs.addAll(searchResults);
+        songs.addAll(searchResults); // Update observable list
     }
 
-    // read
+    /**
+     * Returns the observable list of songs for UI binding.
+     * @return ObservableList<Song>
+     */
     public ObservableList<Song> getObservableSongs() {
         return songs;
     }
 
-    // update - TODO: Check if working right
+    /**
+     * Updates an existing song in both the business layer and observable list.
+     * @throws Exception if update in MyTunesManager fails.
+     */
     public void updateSongs(Song updatedSong) throws Exception {
-        // update song in DAL layer (through the layers)
-        myTunesManager.updateSongs(updatedSong);
+        myTunesManager.updateSongs(updatedSong); // Update in business layer
 
-        // update observable list (and UI)
+        // Update in observable list for UI refresh
         int index = songs.indexOf(updatedSong);
         if (index != -1) {
-            songs.set(index, updatedSong);}
+            songs.set(index, updatedSong);
+        }
     }
 
-    // delete
+    /**
+     * Deletes a song from both the business layer and observable list.
+     * @throws Exception if deletion in MyTunesManager fails.
+     */
     public void deleteSongs(Song selectedSong) throws Exception {
-        // delete song in DAL layer (through the layers)
-        myTunesManager.deleteSongs(selectedSong);
-
-        // remove from observable list (and UI)
-        songs.remove(selectedSong);
+        myTunesManager.deleteSongs(selectedSong); // Delete in business layer
+        songs.remove(selectedSong); // Remove from observable list for UI
     }
 
-    // Playlist
-    // create
+    // PLAYLISTS
+    /**
+     * Creates a new playlist and adds it to the observable list.
+     * @return The newly created Playlists object.
+     * @throws Exception if creation fails in MyTunesManager.
+     */
     public Playlists createPlaylists(Playlists newPlaylist) throws Exception {
         System.out.println("Trying to create playlist: " + newPlaylist.getName());
         Playlists playlistCreated = myTunesManager.createPlaylists(newPlaylist);
@@ -75,34 +104,38 @@ public class MyTunesModel {
             System.out.println("MyTunesManager returned null!");
             throw new Exception("Failed to create playlist in DB");
         }
-        playlists.add(playlistCreated);
+        playlists.add(playlistCreated); // Add to observable list for UI
         return playlistCreated;
     }
 
-
-    // read
+    /**
+     * Returns the observable list of playlists for UI binding.
+     * @return ObservableList<Playlists>
+     */
     public ObservableList<Playlists> getObservablePlaylists() {
         return playlists;
     }
 
-    // update - TODO: Check if working right
+    /**
+     * Updates an existing playlist in both the business layer and observable list.
+     * @throws Exception if update in MyTunesManager fails.
+     */
     public void updatePlaylists(Playlists updatedPlaylist) throws Exception {
-        // update playlist in DAL layer (through the layers)
-        myTunesManager.updatePlaylists(updatedPlaylist);
+        myTunesManager.updatePlaylists(updatedPlaylist); // Update in business layer
 
-        // update observable list (and UI)
+        // Update observable list for UI refresh
         int index = playlists.indexOf(updatedPlaylist);
         if (index >= 0) {
             playlists.set(index, updatedPlaylist);
         }
     }
 
-    // delete
+    /**
+     * Deletes a playlist from both the business layer and observable list.
+     * @throws Exception if deletion in MyTunesManager fails.
+     */
     public void deletePlaylists(Playlists selectedPlaylist) throws Exception {
-        // delete song in DAL layer (through the layers)
-        myTunesManager.deletePlaylists(selectedPlaylist);
-
-        // remove from observable list (and UI)
-        playlists.remove(selectedPlaylist);
+        myTunesManager.deletePlaylists(selectedPlaylist); // Delete in business layer
+        playlists.remove(selectedPlaylist); // Remove from observable list for UI
     }
 }

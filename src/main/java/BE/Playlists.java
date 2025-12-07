@@ -1,11 +1,11 @@
 package BE;
 
 public class Playlists {
+
     private int id;
     private String name;
     private int songs;
     private double time;
-
 
     public Playlists(int id, String name, int songs, double time) {
         this.id = id;
@@ -22,7 +22,7 @@ public class Playlists {
         return songs;
     }
 
-    public double getPlaylistTime() {
+    public double getTime() {
         return time;
     }
 
@@ -35,7 +35,7 @@ public class Playlists {
     }
 
 
-    public void setPlaylistTime(double time) {
+    public void setTime(double time) {
         this.time = time;
     }
 
@@ -48,4 +48,3 @@ public class Playlists {
         return id;
     }
 }
-
