@@ -35,6 +35,7 @@ public class MyTunesMainController implements Initializable {
     @FXML private Label lblTimer;
     @FXML private TextField txtFieldSearch;
     @FXML private Button btnSearchClear;
+    @FXML private Button btnPlayPause;
     @FXML private Slider volumeSlider;
     @FXML private ListView<Song> lvSongsOnPlaylist;
     @FXML private TableView<Playlists> tblPlaylists;
@@ -56,6 +57,11 @@ public class MyTunesMainController implements Initializable {
     private ObservableList<Song> allSongs; // All songs from model
     private MyTunesSearcher searcher; // Search utility
     private boolean isFilterActive = false; // Tracks if search filter is applied
+    @FXML
+    private Label lblSongsOnPlaylist;
+
+    private enum SongSource {PLAYLIST, ALL_SONGS} // TODO: Explain
+    private SongSource currentSource = null; // TODO: Explain
     Song currentlyPlayingSong = null; // Tracks currently playing song
 
     /**
@@ -74,11 +80,25 @@ public class MyTunesMainController implements Initializable {
         colPlaylistSongs.setCellValueFactory(new PropertyValueFactory<>("songs"));
         colPlaylistTime.setCellValueFactory(new PropertyValueFactory<>("time"));
 
-        // Listener for selecting playlist
-        tblPlaylists.getSelectionModel().selectedItemProperty().addListener((observableValue, oldValue, selectedPlaylist) -> {
-            if (selectedPlaylist != null) {
-                // Load songs from selected playlist here
+        volumeSlider.setValue(100.0);
+
+        // Listener for playlist
+        tblPlaylists.getSelectionModel().selectedItemProperty().addListener((obs, old, playlist) -> {
+            if (playlist != null) {
+                ObservableList<Song> songsOnPlaylist = null;
+                try {
+                    songsOnPlaylist = model.getSongsOnPlaylist(playlist);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                lvSongsOnPlaylist.setItems(songsOnPlaylist);
             }
+        });
+
+        // Listener for volume
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            musicPlayer.setVolume(newValue.doubleValue() / 100);
         });
     }
 
@@ -304,7 +324,7 @@ public class MyTunesMainController implements Initializable {
      * Removes song from playlist.
      */
     @FXML
-    private void onClickDeleteSongInPlaylist(ActionEvent actionEvent) {
+    private void onClickDeleteSongOnPlaylist(ActionEvent actionEvent) {
         Song selectedSong = lvSongsOnPlaylist.getSelectionModel().getSelectedItem();
         if (selectedSong == null) return;
 
@@ -312,14 +332,92 @@ public class MyTunesMainController implements Initializable {
     }
 
     // MUSIC PLAYER
+    /**
+     * Handles clicking the 'Next Song' button.
+     * Controls selection sync between ListView and TableView and plays the next song.
+     */
     @FXML
-    private void onClickNextSong(ActionEvent actionEvent) {
-        // TODO: Implement
+    private void onClickNextSong(ActionEvent event) {
+
+        if (currentlyPlayingSong == null || currentSource == null)
+            return;
+
+        ObservableList<Song> list;
+        int index;
+
+        if (currentSource == SongSource.PLAYLIST) {
+            list = lvSongsOnPlaylist.getItems();
+            index = list.indexOf(currentlyPlayingSong);
+
+            if (index == -1 || index >= list.size() - 1)
+                return; // no next
+            Song next = list.get(index + 1);
+
+            lvSongsOnPlaylist.getSelectionModel().select(index + 1);
+            play(next);
+
+        } else { // ALL_SONGS
+            list = tblSongs.getItems();
+            index = list.indexOf(currentlyPlayingSong);
+
+            if (index == -1 || index >= list.size() - 1)
+                return;
+            Song next = list.get(index + 1);
+
+            tblSongs.getSelectionModel().select(index + 1);
+            play(next);
+        }
     }
 
+    /**
+     * Handles clicking the 'Previous Song' button.
+     * Controls selection sync between ListView and TableView and plays the previous song.
+     */
     @FXML
-    private void onClickPreviousSong(ActionEvent actionEvent) {
-        // TODO: Implement
+    private void onClickPreviousSong(ActionEvent event) {
+
+        if (currentlyPlayingSong == null || currentSource == null)
+            return;
+
+        ObservableList<Song> list;
+        int index;
+
+        if (currentSource == SongSource.PLAYLIST) {
+            list = lvSongsOnPlaylist.getItems();
+            index = list.indexOf(currentlyPlayingSong);
+
+            if (index <= 0)
+                return;
+            Song prev = list.get(index - 1);
+
+            lvSongsOnPlaylist.getSelectionModel().select(index - 1);
+            play(prev);
+
+        } else { // ALL_SONGS
+            list = tblSongs.getItems();
+            index = list.indexOf(currentlyPlayingSong);
+
+            if (index <= 0)
+                return;
+            Song prev = list.get(index - 1);
+
+            tblSongs.getSelectionModel().select(index - 1);
+            play(prev);
+        }
+    }
+
+    private void play(Song song) {
+        musicPlayer.stop();
+        musicPlayer.load(song.getFilePath());
+        musicPlayer.play();
+        currentlyPlayingSong = song;
+        // Detect where it was selected from
+        if (lvSongsOnPlaylist.getSelectionModel().getSelectedItem() == song) {
+            currentSource = SongSource.PLAYLIST;
+        } else if (tblSongs.getSelectionModel().getSelectedItem() == song) {
+            currentSource = SongSource.ALL_SONGS;
+        }
+        lblCurrentlyPlaying.setText(song.getTitle() + " - " + song.getArtist());
     }
 
     /**
@@ -340,13 +438,16 @@ public class MyTunesMainController implements Initializable {
 
             currentlyPlayingSong = selectedSong;
             lblCurrentlyPlaying.setText(selectedSong.getTitle() + " - " + selectedSong.getArtist());
+            btnPlayPause.setText("⏸");
             return;
         }
         // Same song, toggle pause/play
         if (musicPlayer.isPlaying()) {
             musicPlayer.pause();
+            btnPlayPause.setText("‣");
         } else {
             musicPlayer.play();
+            btnPlayPause.setText("⏸");
         }
     }
 }

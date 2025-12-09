@@ -216,4 +216,55 @@ public class MyTunesDAO_DB implements ISongDataAccess, IPlaylistDataAccess {
             throw new Exception("Could not delete playlist", ex);
         }
     }
+
+    // Songs on playlist
+    @Override
+    public List<Song> getSongsOnPlaylist(Playlists playlist) throws Exception {
+
+        List<Song> songs = new ArrayList<>();
+
+        String sql = "SELECT s.Song_ID, s.Title, s.Artist, s.Category, s.Time, s.FilePath " +
+                "FROM dbo.Song s " +
+                "INNER JOIN dbo.Junction j ON s.Song_ID = j.Song_ID " +
+                "WHERE j.Playlist_ID = ?;";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, playlist.getId());
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt("Song_ID");
+                String title = rs.getString("Title");
+                String artist = rs.getString("Artist");
+                String category = rs.getString("Category");
+                double time = rs.getDouble("Time");
+                String filePath = rs.getString("FilePath");
+
+                songs.add(new Song(id, title, artist, category, time, filePath));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not get songs on playlist", ex);
+        }
+        return songs;
+    }
+    public void addSongToPlaylist(int playlistId, int songId) throws Exception {
+        String sql = "INSERT INTO dbo.Junction (Playlist_ID, Song_ID) VALUES (?, ?);";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, playlistId);
+            stmt.setInt(2, songId);
+            stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not add song to playlist", ex);
+        }
+    }
 }

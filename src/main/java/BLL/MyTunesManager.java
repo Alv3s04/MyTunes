@@ -65,4 +65,9 @@ public class MyTunesManager {
     public void deletePlaylists(Playlists selectedPlaylists) throws Exception {
         iPlaylistDataAccess.deletePlaylists(selectedPlaylists);
     }
+
+    // Songs on playlist
+    public List<Song> getSongsOnPlaylist(Playlists songsOnPlaylist) throws Exception {
+        return iPlaylistDataAccess.getSongsOnPlaylist(songsOnPlaylist);
+    }
 }

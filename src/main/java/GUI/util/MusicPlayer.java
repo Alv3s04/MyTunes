@@ -21,7 +21,9 @@ public class MusicPlayer {
             }
             Media media = new Media(file.toURI().toString());
             mediaPlayer = new MediaPlayer(media);
-        }
+            mediaPlayer.setAutoPlay(true);
+            mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+    }
 
     public void play(){
         if (mediaPlayer != null) {

@@ -138,4 +138,14 @@ public class MyTunesModel {
         myTunesManager.deletePlaylists(selectedPlaylist); // Delete in business layer
         playlists.remove(selectedPlaylist); // Remove from observable list for UI
     }
+
+    /**
+     * Returns the observable list of songs in a playlist.
+     * @return ObservableList<Song>
+     */
+    public ObservableList<Song> getSongsOnPlaylist(Playlists songsInPlaylist) throws Exception {
+        return FXCollections.observableArrayList(
+                myTunesManager.getSongsOnPlaylist(songsInPlaylist)
+        );
+    }
 }

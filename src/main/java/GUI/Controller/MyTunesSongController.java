@@ -165,7 +165,6 @@ public class MyTunesSongController {
             else {
                 // Create new song object (ID = 0 since DB will assign ID automatically)
                 Song newSong = new Song(0, title, artist, category, time, filePath);
-                newSong.setFilePath(filePath); // ER DET HER NØDVENDIGT?
                 model.createSongs(newSong); // Save song through model
 
                 // Show success message
