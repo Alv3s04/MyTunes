@@ -4,13 +4,14 @@ import BE.Playlists;
 import BE.Song;
 import DAL.ISongDataAccess;
 import DAL.IPlaylistDataAccess;
+import DAL.ISongsOnPlaylistDataAccess;
 
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyTunesDAO_DB implements ISongDataAccess, IPlaylistDataAccess {
+public class MyTunesDAO_DB implements ISongDataAccess, IPlaylistDataAccess, ISongsOnPlaylistDataAccess {
 
     private DBConnector databaseConnector = new DBConnector();
 
@@ -218,6 +219,7 @@ public class MyTunesDAO_DB implements ISongDataAccess, IPlaylistDataAccess {
     }
 
     // Songs on playlist
+    // read
     @Override
     public List<Song> getSongsOnPlaylist(Playlists playlist) throws Exception {
 
@@ -252,6 +254,8 @@ public class MyTunesDAO_DB implements ISongDataAccess, IPlaylistDataAccess {
         }
         return songs;
     }
+
+    // create
     public void addSongToPlaylist(int playlistId, int songId) throws Exception {
         String sql = "INSERT INTO dbo.Junction (Playlist_ID, Song_ID) VALUES (?, ?);";
 
@@ -265,6 +269,21 @@ public class MyTunesDAO_DB implements ISongDataAccess, IPlaylistDataAccess {
         } catch (SQLException ex) {
             ex.printStackTrace();
             throw new Exception("Could not add song to playlist", ex);
+        }
+    }
+
+    public void deleteSongOnPlaylist(int playListId, int songId) throws Exception {
+        String sql = "DELETE FROM dbo.Junction WHERE Playlist_ID = ? AND Song_ID = ?;";
+
+        try (Connection conn = databaseConnector.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, playListId);
+            stmt.setInt(2, songId);
+            stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not delete song from playlist", ex);
         }
     }
 }

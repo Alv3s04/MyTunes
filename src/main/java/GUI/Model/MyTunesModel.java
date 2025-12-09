@@ -139,6 +139,7 @@ public class MyTunesModel {
         playlists.remove(selectedPlaylist); // Remove from observable list for UI
     }
 
+    // Songs on playlist
     /**
      * Returns the observable list of songs in a playlist.
      * @return ObservableList<Song>
@@ -147,5 +148,11 @@ public class MyTunesModel {
         return FXCollections.observableArrayList(
                 myTunesManager.getSongsOnPlaylist(songsInPlaylist)
         );
+    }
+
+    public void deleteSongOnPlaylist(Playlists playlist, Song song) throws Exception {
+        myTunesManager.deleteSongOnPlaylist(playlist.getId(), song.getId()); // Delete in business layer
+        // Remove from observable list for UI
+        ObservableList<Song> songsOnPlaylist = FXCollections.observableArrayList(myTunesManager.getSongsOnPlaylist(playlist));
     }
 }

@@ -5,9 +5,11 @@ import BE.Song;
 import BLL.util.MyTunesSearcher;
 import DAL.ISongDataAccess;
 import DAL.IPlaylistDataAccess;
+import DAL.ISongsOnPlaylistDataAccess;
 import DAL.db.MyTunesDAO_DB;
 
 import java.io.IOException;
+import java.rmi.server.ExportException;
 import java.util.List;
 
 /**
@@ -19,11 +21,13 @@ public class MyTunesManager {
 
     private ISongDataAccess myTunesDAO;
     private IPlaylistDataAccess iPlaylistDataAccess;
+    private ISongsOnPlaylistDataAccess iSongsOnPlaylistAccess;
     private MyTunesSearcher myTunesSearcher = new MyTunesSearcher();
 
     public MyTunesManager() throws IOException {
         myTunesDAO = new MyTunesDAO_DB();
         iPlaylistDataAccess = new MyTunesDAO_DB();
+        iSongsOnPlaylistAccess = new MyTunesDAO_DB();
     }
 
     // Songs
@@ -68,6 +72,10 @@ public class MyTunesManager {
 
     // Songs on playlist
     public List<Song> getSongsOnPlaylist(Playlists songsOnPlaylist) throws Exception {
-        return iPlaylistDataAccess.getSongsOnPlaylist(songsOnPlaylist);
+        return iSongsOnPlaylistAccess.getSongsOnPlaylist(songsOnPlaylist);
+    }
+
+    public void deleteSongOnPlaylist(int playlistId, int songId) throws Exception {
+        iSongsOnPlaylistAccess.deleteSongOnPlaylist(playlistId, songId);
     }
 }

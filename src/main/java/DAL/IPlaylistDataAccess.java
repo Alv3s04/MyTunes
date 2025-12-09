@@ -12,7 +12,4 @@ public interface IPlaylistDataAccess {
     List<Playlists> getAllPlaylists() throws Exception;
     void updatePlaylists(Playlists playlists) throws Exception;
     void deletePlaylists(Playlists playlists) throws Exception;
-
-    List<Song> getSongsOnPlaylist(Playlists playlists) throws Exception;
-
 }
