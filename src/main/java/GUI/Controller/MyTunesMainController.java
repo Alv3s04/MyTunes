@@ -103,6 +103,22 @@ public class MyTunesMainController implements Initializable {
             }
         });
 
+        // When a song in the playlist is selected, clear selection in all songs table
+        lvSongsOnPlaylist.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
+            if (selected != null) {
+                tblSongs.getSelectionModel().clearSelection();
+                currentSource = SongSource.PLAYLIST;
+            }
+        });
+
+        // When a song in the all songs table is selected, clear selection in playlist ListView
+        tblSongs.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
+            if (selected != null) {
+                lvSongsOnPlaylist.getSelectionModel().clearSelection();
+                currentSource = SongSource.ALL_SONGS;
+            }
+        });
+
         // Listener for volume
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             musicPlayer.setVolume(newValue.doubleValue() / 100);
