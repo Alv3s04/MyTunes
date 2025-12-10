@@ -12,22 +12,19 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="GUI.Controller.MyTunesMainController">
     <children>
-        <Label fx:id="lblCurrentlyPlaying" alignment="CENTER" layoutX="268.0" layoutY="21.0" prefHeight="26.0" prefWidth="374.0" text="(none) ... is playing">
-            <font>
-                <Font size="16.0" />
-            </font></Label>
+        <Label fx:id="lblCurrentlyPlaying" alignment="CENTER" layoutX="14.0" layoutY="19.0" prefHeight="26.0" prefWidth="270.0" text="(none) ... is playing" />
         <TextField fx:id="txtFieldSearch" layoutX="722.0" layoutY="21.0" prefHeight="26.0" prefWidth="115.0" promptText="Search..." />
         <Label layoutX="688.0" layoutY="25.0" prefHeight="18.0" prefWidth="32.0" text="Filter:" />
-        <Slider fx:id="volumeSlider" layoutX="72.0" layoutY="63.0" prefHeight="18.0" prefWidth="142.0" />
+        <Slider fx:id="volumeSlider" layoutX="725.0" layoutY="53.0" prefHeight="18.0" prefWidth="155.0" />
 
         <Button fx:id="btnSearchClear" layoutX="846.0" layoutY="21.0" mnemonicParsing="false" onAction="#onClickSearchClear" prefHeight="26.0" prefWidth="34.0" text="🔍" />
-        <Button layoutX="79.0" layoutY="34.0" mnemonicParsing="false" onAction="#onClickPreviousSong" text="&lt;&lt;" />
-        <Button fx:id="btnPlayPause" layoutX="120.0" layoutY="24.0" mnemonicParsing="false" onAction="#onClickPlayPause" prefHeight="38.0" prefWidth="45.0" text="‣">
+        <Button layoutX="384.0" layoutY="21.0" mnemonicParsing="false" onAction="#onClickPreviousSong" text="&lt;&lt;" />
+        <Button fx:id="btnPlayPause" layoutX="432.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClickPlayPause" prefHeight="38.0" prefWidth="45.0" text="‣">
             <font>
                 <Font size="16.0" />
             </font>
         </Button>
-        <Button layoutX="173.0" layoutY="34.0" mnemonicParsing="false" onAction="#onClickNextSong" text="&gt;&gt;" />
+        <Button layoutX="495.0" layoutY="21.0" mnemonicParsing="false" onAction="#onClickNextSong" text="&gt;&gt;" />
 
         <Button layoutX="8.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickNewPlaylist" text="New Playlist" />
         <Button layoutX="95.0" layoutY="560.0" mnemonicParsing="false" onAction="#onClickUpdatePlaylist" text="Edit Playlist" />
@@ -73,6 +70,8 @@
         </TableView>
 
         <ListView fx:id="lvSongsOnPlaylist" layoutX="287.0" layoutY="108.0" prefHeight="450.0" prefWidth="155.0" />
-        <Label fx:id="lblTimer" layoutX="401.0" layoutY="45.0" text="Timer (0:00 / [Time])" />
+        <Label fx:id="lblTimer" layoutX="401.0" layoutY="53.0" text="Timer (0:00 / [Time])" />
+      <Slider fx:id="timeSlider" layoutX="316.0" layoutY="71.0" prefHeight="14.0" prefWidth="270.0" />
+      <Label layoutX="674.0" layoutY="52.0" prefHeight="18.0" prefWidth="45.0" text="Volume:" />
     </children>
 </AnchorPane>

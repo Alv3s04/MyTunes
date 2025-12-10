@@ -17,8 +17,12 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
+import javax.print.attribute.standard.MediaPrintableArea;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
@@ -43,6 +47,7 @@ public class MyTunesMainController implements Initializable {
     @FXML private Button btnDeleteSongOnPlaylist;
     @FXML private Button btnMoveSongToPlaylist;
     @FXML private Slider volumeSlider;
+    @FXML private Slider timeSlider;
     @FXML private ListView<Song> lvSongsOnPlaylist;
     @FXML private TableView<Playlists> tblPlaylists;
     @FXML private TableView<Song> tblSongs;
@@ -75,17 +80,17 @@ public class MyTunesMainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        // Connect table columns to Song and Playlist properties
-        colTitles.setCellValueFactory(new PropertyValueFactory<>("title"));
-        colArtists.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        colCategories.setCellValueFactory(new PropertyValueFactory<>("category"));
-        colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
-        colPlaylistName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colPlaylistSongs.setCellValueFactory(new PropertyValueFactory<>("songs"));
-        colPlaylistTime.setCellValueFactory(new PropertyValueFactory<>("time"));
-        hideSongsOnPlaylistControls();
+            // Connect table columns to Song and Playlist properties
+            colTitles.setCellValueFactory(new PropertyValueFactory<>("title"));
+            colArtists.setCellValueFactory(new PropertyValueFactory<>("artist"));
+            colCategories.setCellValueFactory(new PropertyValueFactory<>("category"));
+            colTime.setCellValueFactory(new PropertyValueFactory<>("time"));
+            colPlaylistName.setCellValueFactory(new PropertyValueFactory<>("name"));
+            colPlaylistSongs.setCellValueFactory(new PropertyValueFactory<>("songs"));
+            colPlaylistTime.setCellValueFactory(new PropertyValueFactory<>("time"));
+            hideSongsOnPlaylistControls();
 
-        volumeSlider.setValue(100.0);
+            volumeSlider.setValue(100.0);
 
         // Listener for playlist (Hides and shows songs on playlist controls)
         tblPlaylists.getSelectionModel().selectedItemProperty().addListener((obs, old, playlist) -> {
@@ -103,21 +108,21 @@ public class MyTunesMainController implements Initializable {
             }
         });
 
-        // When a song in the playlist is selected, clear selection in all songs table
-        lvSongsOnPlaylist.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
-            if (selected != null) {
-                tblSongs.getSelectionModel().clearSelection();
-                currentSource = SongSource.PLAYLIST;
-            }
-        });
+            // When a song in the playlist is selected, clear selection in all songs table
+            lvSongsOnPlaylist.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
+                if (selected != null) {
+                    tblSongs.getSelectionModel().clearSelection();
+                    currentSource = SongSource.PLAYLIST;
+                }
+            });
 
-        // When a song in the all songs table is selected, clear selection in playlist ListView
-        tblSongs.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
-            if (selected != null) {
-                lvSongsOnPlaylist.getSelectionModel().clearSelection();
-                currentSource = SongSource.ALL_SONGS;
-            }
-        });
+            // When a song in the all songs table is selected, clear selection in playlist ListView
+            tblSongs.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
+                if (selected != null) {
+                    lvSongsOnPlaylist.getSelectionModel().clearSelection();
+                    currentSource = SongSource.ALL_SONGS;
+                }
+            });
 
         // Listener for volume
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -428,17 +433,39 @@ public class MyTunesMainController implements Initializable {
         currentlyPlayingSong = song;
         currentSource = source;
 
-        if (source == SongSource.PLAYLIST) {
+        // Update UI selection
+        if (source == SongSource.PLAYLIST)
             lvSongsOnPlaylist.getSelectionModel().select(song);
-        } else {
+        else
             tblSongs.getSelectionModel().select(song);
-        }
 
         lblCurrentlyPlaying.setText(song.getTitle() + " - " + song.getArtist());
+
+        // Load and play the song
         musicPlayer.stop();
         musicPlayer.load(song.getFilePath());
-        musicPlayer.play();
-        btnPlayPause.setText("⏸");
+
+        MediaPlayer mp = musicPlayer.getMediaPlayer();
+        if (mp != null) {
+            // Set up listeners when media is ready
+            mp.setOnReady(() -> {
+                Duration total = mp.getTotalDuration();
+                timeSlider.setMax(total.toSeconds());
+                lblTimer.setText(formatTime(Duration.ZERO, total));
+            });
+
+            // Update slider and timer as song plays
+            mp.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
+                if (!timeSlider.isValueChanging()) {
+                    timeSlider.setValue(newTime.toSeconds());
+                }
+                Duration total = mp.getTotalDuration();
+                lblTimer.setText(formatTime(newTime, total));
+            });
+
+            musicPlayer.play();
+            btnPlayPause.setText("⏸");
+        }
     }
 
     /**
