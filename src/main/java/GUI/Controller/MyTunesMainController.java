@@ -74,11 +74,9 @@ public class MyTunesMainController implements Initializable {
     private SongSource currentSource = null; // TODO: Explain
     Song currentlyPlayingSong = null; // Tracks currently playing song
 
-    /**
-     * Runs automatically when FXML is loaded.
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    
+        @Override
+        public void initialize(URL url, ResourceBundle resourceBundle) {
 
             // Connect table columns to Song and Playlist properties
             colTitles.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -92,21 +90,21 @@ public class MyTunesMainController implements Initializable {
 
             volumeSlider.setValue(100.0);
 
-        // Listener for playlist (Hides and shows songs on playlist controls)
-        tblPlaylists.getSelectionModel().selectedItemProperty().addListener((obs, old, playlist) -> {
-            if (playlist != null) {
-                try {
-                    ObservableList<Song> songsOnPlaylist = model.getSongsOnPlaylist(playlist);
-                    lvSongsOnPlaylist.setItems(songsOnPlaylist);
-                    lblSongsOnPlaylist.setText("Songs on: " + playlist.getName());
-                    showSongsOnPlaylistControls();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+            // Listener for playlist selection
+            tblPlaylists.getSelectionModel().selectedItemProperty().addListener((obs, old, playlist) -> {
+                if (playlist != null) {
+                    try {
+                        ObservableList<Song> songsOnPlaylist = model.getSongsOnPlaylist(playlist);
+                        lvSongsOnPlaylist.setItems(songsOnPlaylist);
+                        lblSongsOnPlaylist.setText("Songs on: " + playlist.getName());
+                        showSongsOnPlaylistControls();
+                    } catch (Exception e) {
+                        displayError(e);
+                    }
+                } else {
+                    hideSongsOnPlaylistControls();
                 }
-            } else {
-                hideSongsOnPlaylistControls();
-            }
-        });
+            });
 
             // When a song in the playlist is selected, clear selection in all songs table
             lvSongsOnPlaylist.getSelectionModel().selectedItemProperty().addListener((obs, old, selected) -> {
@@ -124,11 +122,36 @@ public class MyTunesMainController implements Initializable {
                 }
             });
 
-        // Listener for volume
-        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            musicPlayer.setVolume(newValue.doubleValue() / 100);
-        });
-    }
+            // Listener for volume
+            volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+                musicPlayer.setVolume(newValue.doubleValue() / 100);
+            });
+
+            // Allow user to seek by dragging time slider
+            timeSlider.setOnMouseReleased(event -> {
+                if (musicPlayer.getMediaPlayer() != null && timeSlider.getMax() > 0) {
+                    musicPlayer.seek(Duration.seconds(timeSlider.getValue()));
+                }
+            });
+        }
+
+        /**
+         * Formats time as MM:SS / MM:SS
+         */
+        private String formatTime(Duration current, Duration total) {
+            if (total == null || total.isUnknown() || total.lessThanOrEqualTo(Duration.ZERO)) {
+                return String.format("%02d:%02d / --:--",
+                        (int) current.toSeconds() / 60,
+                        (int) current.toSeconds() % 60);
+            }
+
+            int curr = (int) current.toSeconds();
+            int tot = (int) total.toSeconds();
+
+            return String.format("%02d:%02d / %02d:%02d",
+                    curr / 60, curr % 60,
+                    tot / 60, tot % 60);
+        }
 
     /**
      * Injects the model into the controller and initializes the tables.
