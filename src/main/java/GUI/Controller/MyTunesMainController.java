@@ -285,6 +285,9 @@ public class MyTunesMainController implements Initializable {
                 List<Song> updatedSongs = dao.getSongsOnPlaylist(selectedPlaylist);
                 lvSongsOnPlaylist.getItems().setAll(updatedSongs);
 
+                List<Playlists> updatedPlaylists = dao.getAllPlaylists();
+                tblPlaylists.getItems().setAll(updatedPlaylists);
+                tblPlaylists.getSelectionModel().select(selectedPlaylist);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -397,6 +400,10 @@ public class MyTunesMainController implements Initializable {
             try {
                 model.deleteSongOnPlaylist(selectedPlaylist, selectedSong);
                 lvSongsOnPlaylist.getItems().remove(selectedSong);
+
+                List<Playlists> updatedPlaylists = dao.getAllPlaylists();
+                tblPlaylists.getItems().setAll(updatedPlaylists);
+                tblPlaylists.getSelectionModel().select(selectedPlaylist);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -425,7 +432,6 @@ public class MyTunesMainController implements Initializable {
         play(nextSong, currentSource);
     }
 
-
     /**
      * Handles clicking the 'Previous Song' button.
      * Controls selection sync between ListView and TableView and plays the previous song.
@@ -446,7 +452,6 @@ public class MyTunesMainController implements Initializable {
         Song prevSong = list.get(index - 1);
         play(prevSong, currentSource);
     }
-
 
     /**
      * Plays selected song
@@ -470,6 +475,7 @@ public class MyTunesMainController implements Initializable {
 
         MediaPlayer mp = musicPlayer.getMediaPlayer();
         if (mp != null) {
+            musicPlayer.setVolume(volumeSlider.getValue() / 100);
             // Set up listeners when media is ready
             mp.setOnReady(() -> {
                 Duration total = mp.getTotalDuration();
@@ -485,9 +491,35 @@ public class MyTunesMainController implements Initializable {
                 Duration total = mp.getTotalDuration();
                 lblTimer.setText(formatTime(newTime, total));
             });
+            mp.setOnEndOfMedia(() -> {
+                playNextSongAutomatically();
+            });
 
             musicPlayer.play();
             btnPlayPause.setText("⏸");
+        }
+    }
+    /**
+     * Automatically plays the next song when current song ends
+     * Called by the MediaPlayer's onEndOfMedia listener
+     */
+    private void playNextSongAutomatically() {
+        if (currentlyPlayingSong == null || currentSource == null)
+            return;
+
+        ObservableList<Song> list = (currentSource == SongSource.PLAYLIST)
+                ? lvSongsOnPlaylist.getItems()
+                : tblSongs.getItems();
+
+        int index = list.indexOf(currentlyPlayingSong);
+
+        // If there's a next song, play it
+        if (index != -1 && index < list.size() - 1) {
+            Song nextSong = list.get(index + 1);
+            play(nextSong, currentSource);
+        } else {
+            // Last song finished - update button to play state
+            btnPlayPause.setText("‣");
         }
     }
 

@@ -158,22 +158,39 @@ public class MyTunesDAO_DB implements ISongDataAccess, IPlaylistDataAccess, ISon
     public List<Playlists> getAllPlaylists() throws Exception {
 
         ArrayList<Playlists> allPlaylists = new ArrayList<>();
-
+        String sql = "SELECT * FROM dbo.Playlist;";
         // try-with-resources
         try (Connection conn = databaseConnector.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            String sql = "SELECT * FROM dbo.Playlist;";
+
             ResultSet rs = stmt.executeQuery(sql);
 
             // Loop through rows from the database result set
             while (rs.next()) {
-                //Map DB row to Song object
                 int id = rs.getInt("Playlist_ID");
                 String name = rs.getString("Name");
-                int songs = rs.getInt("Songs");
-                double time = rs.getDouble("Time");
-                Playlists playlist = new Playlists(id, name, songs, time);
+
+                // Calculate songs count and total time in Java
+                int songCount = 0;
+                double totalTime = 0.0;
+
+                // Get songs for this playlist
+                String songsSql = "SELECT s.Time FROM dbo.Song s " +
+                        "INNER JOIN dbo.Junction j ON s.Song_ID = j.Song_ID " +
+                        "WHERE j.Playlist_ID = ?";
+
+                try (PreparedStatement songStmt = conn.prepareStatement(songsSql)) {
+                    songStmt.setInt(1, id);
+                    ResultSet songRs = songStmt.executeQuery();
+
+                    while (songRs.next()) {
+                        songCount++;
+                        totalTime += songRs.getDouble("Time");
+                    }
+                }
+
+                Playlists playlist = new Playlists(id, name, songCount, totalTime);
                 allPlaylists.add(playlist);
             }
             return allPlaylists;
