@@ -60,7 +60,7 @@ public class Song {
 
     @Override
     public String toString() {
-        return id + ": " + title + " " + artist + " " + category + " " + " (" + time + ") "+ " " + filePath;
+        return title + " - " + artist;
     }
 
     public int getId() {
