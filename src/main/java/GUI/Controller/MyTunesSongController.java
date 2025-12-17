@@ -107,7 +107,6 @@ public class MyTunesSongController {
 
     /**
      * Closes the window without saving the song.
-     * TODO: Add a confirmation for closing without saving.
      */
     @FXML
     private void onClickCancelSong(ActionEvent actionEvent) {

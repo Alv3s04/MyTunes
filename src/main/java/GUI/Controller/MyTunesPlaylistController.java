@@ -42,7 +42,6 @@ public class MyTunesPlaylistController {
     /**
      * Closes the window.
      * Triggered when the user clicks the Cancel button.
-     * TODO: Add a confirmation for closing without saving.
      */
     @FXML
     private void onClickCancelPlaylist(ActionEvent actionEvent) {

@@ -99,7 +99,7 @@ public class MyTunesDAO_DB implements ISongDataAccess, IPlaylistDataAccess, ISon
             stmt.setString(2, song.getArtist());
             stmt.setString(3, song.getCategory());
             stmt.setDouble(4, song.getTime());
-            stmt.setInt(5, song.getId()); // her identificere vi hvilken row der ska opdateres.
+            stmt.setInt(5, song.getId()); // here we identify which row to update.
 
             stmt.executeUpdate();
         }

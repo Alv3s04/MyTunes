@@ -51,16 +51,6 @@ public class MyTunesModel {
     }
 
     /**
-     * Searches songs based on a query and updates the observable list.
-     * @throws Exception if search in MyTunesManager fails.
-     */
-    public void searchSongs(String query) throws Exception {
-        List<Song> searchResults = myTunesManager.searchSongs(query);
-        songs.clear();
-        songs.addAll(searchResults); // Update observable list
-    }
-
-    /**
      * Returns the observable list of songs for UI binding.
      * @return ObservableList<Song>
      */

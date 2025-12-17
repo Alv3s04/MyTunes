@@ -70,8 +70,8 @@ public class MyTunesMainController implements Initializable {
     private boolean isFilterActive = false; // Tracks if search filter is applied
     private MyTunesDAO_DB dao;
 
-    private enum SongSource {PLAYLIST, ALL_SONGS} // TODO: Explain
-    private SongSource currentSource = null; // TODO: Explain
+    private enum SongSource {PLAYLIST, ALL_SONGS}
+    private SongSource currentSource = null;
     Song currentlyPlayingSong = null; // Tracks currently playing song
 
     
