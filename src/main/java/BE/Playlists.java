@@ -34,7 +34,6 @@ public class Playlists {
         this.songs = songs;
     }
 
-
     public void setTime(double time) {
         this.time = time;
     }

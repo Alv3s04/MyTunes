@@ -22,7 +22,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import javax.print.attribute.standard.MediaPrintableArea;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;

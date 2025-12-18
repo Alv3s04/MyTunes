@@ -51,14 +51,6 @@ public class MusicPlayer {
         }
     }
 
-    public Duration getCurrentTime() {
-        return mediaPlayer != null ? mediaPlayer.getCurrentTime() : Duration.ZERO;
-    }
-
-    public Duration getTotalDuration() {
-        return mediaPlayer != null ? mediaPlayer.getTotalDuration() : Duration.ZERO;
-    }
-
     public void seek(Duration time) {
         if (mediaPlayer != null) {
             mediaPlayer.seek(time);
